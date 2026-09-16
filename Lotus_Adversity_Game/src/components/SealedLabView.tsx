@@ -1,20 +1,19 @@
 import { FC, useState } from "react";
 import {
-  Cpu,
   ShieldAlert,
   CheckCircle2,
-  XCircle,
   Terminal,
   FlaskConical,
   Flower2,
   Crosshair,
   Lock,
   ScrollText,
+  Ghost,
+  Trash2,
+  Eye,
 } from "lucide-react";
-import { FrameworksLabView } from "./FrameworksLabView";
-import { EngineSandboxView } from "./EngineSandboxView";
-import { ForeverFlowersView } from "./ForeverFlowersView";
-import { phaseDossiersData } from "../data/spokesAndPillarsData";
+import { spokesData } from "../data/spokesAndPillarsData";
+import { foreverFlowersData } from "../data/foreverFlowersData";
 import { runLabVerification, LabVerification } from "../lab/labChecks";
 
 interface SealedLabViewProps {
@@ -23,25 +22,25 @@ interface SealedLabViewProps {
 
 type ChamberSegment = "containment" | "verdict" | "gates" | "covenants";
 
-const SEGMENTS: { id: ChamberSegment; label: string; icon: typeof Cpu; hint: string }[] = [
-  { id: "containment", label: "Lab Containment", icon: FlaskConical, hint: "Frameworks, math specs & the shelved duel" },
-  { id: "verdict", label: "Wheel Verdict", icon: Crosshair, hint: "Interactive corruption ↔ purity sandbox" },
-  { id: "gates", label: "Sealing Gates", icon: ShieldAlert, hint: "Run live Airseal verification" },
+const SEGMENTS: { id: ChamberSegment; label: string; icon: typeof FlaskConical; hint: string }[] = [
+  { id: "containment", label: "Lab Containment", icon: FlaskConical, hint: "What was sealed and why" },
+  { id: "verdict", label: "Wheel Verdict", icon: Crosshair, hint: "Canonical 15-spoke truth" },
+  { id: "gates", label: "Sealing Gates", icon: ShieldAlert, hint: "Run live airseal verification" },
   { id: "covenants", label: "Covenants", icon: Flower2, hint: "The 8 Forever Flowers archive" },
 ];
 
-const STATUS_CHIP: Record<string, string> = {
-  "COMPLETED": "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-  "SEALED": "bg-amber-500/10 text-amber-400 border-amber-500/40",
-  "PAUSED": "bg-rose-500/10 text-rose-400 border-rose-500/30",
-  "ACTIVE SPRINT": "bg-amber-500/10 text-amber-400 border-amber-500/40",
-};
+const GHOST_ENTRIES = [
+  { id: "12-spoke", label: "12-Spoke Geometry", detail: "Replaced by immutable 15-spoke canon in Gate 1." },
+  { id: "8-spoke", label: "8-Spoke Matrix", detail: "Stripped from spokesAndPillarsData, loreChroniclesData, and BrokenRingWheelView." },
+  { id: "phantom-reads", label: "Phantom Spoke Reads", detail: "Ghost keys (spoke-3-stance, spoke-7-cartography, spoke-9-trapping, spoke-12-masonry) removed from useAppStore." },
+  { id: "stale-combat", label: "Stale Combat Lab Views", detail: "FrameworksLabView and EngineSandboxView detached from the Ratification Chamber." },
+  { id: "stale-version", label: "Stale Version Strings", detail: "v0.5-combat tag and Airsealed v2.6 badge purged from metadata.json, index.html, and Header." },
+  { id: "export-ghost", label: "AI Studio Export Surfaces", detail: "ShareThisProgressSection streamlined; export-project-zip guarded behind git-first protocol." },
+];
 
 export const SealedLabView: FC<SealedLabViewProps> = ({ playSfx }) => {
   const [segment, setSegment] = useState<ChamberSegment>("containment");
   const [verification, setVerification] = useState<LabVerification | null>(null);
-
-  const phase05 = phaseDossiersData.find((d) => d.phase === "PHASE 0.5");
 
   const runVerification = () => {
     playSfx("anvil");
@@ -76,13 +75,13 @@ export const SealedLabView: FC<SealedLabViewProps> = ({ playSfx }) => {
               The Ratification Chamber
             </h1>
             <p className="text-xs sm:text-sm text-neutral-300 max-w-3xl leading-relaxed font-sans mt-1">
-              One absolute console for the sealed region of the Apparatus. Inspect the wheel's live verdict,
-              re-run the airseal gates on demand, revisit the containment protocol, and read the ratified covenants.
+              One absolute console for the sealed region of the Apparatus. Inspect what was sealed,
+              review the wheel's canonical truth, re-run the airseal gates, and read the ratified covenants.
               No visual "verified" claim is trusted — only passing exit codes.
             </p>
           </div>
 
-          {/* Legislative Segment Switch */}
+          {/* Segment Switch */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {SEGMENTS.map((seg) => {
               const Icon = seg.icon;
@@ -111,97 +110,145 @@ export const SealedLabView: FC<SealedLabViewProps> = ({ playSfx }) => {
         </div>
       </div>
 
-      {/* Segment Content */}
+      {/* SEGMENT: Containment — What was sealed and why */}
       {segment === "containment" && (
-        <FrameworksLabView playSfx={playSfx} />
-      )}
-
-      {segment === "verdict" && (
-        <div className="space-y-4">
-          <div className="p-4 rounded-2xl bg-neutral-950 border border-neutral-800 flex items-start gap-3">
-            <Crosshair className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
-            <div>
-              <p className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
-                Interactive Wheel Verdict
-              </p>
-              <p className="text-xs text-neutral-400 font-sans mt-1 leading-relaxed">
-                This live sandbox renders the wheel from the exact canonical matrix enforced by the airseal gates —
-                flip spokes between Locked, Corrupted, and Purified to watch True (<span className="text-amber-400 font-semibold">amber-500</span>)
-                versus Corrupted (<span className="text-rose-400 font-semibold">rose</span>/<span className="text-emerald-400 font-semibold">emerald</span>) states.
-              </p>
-            </div>
-          </div>
-          <EngineSandboxView playSfx={playSfx} />
-        </div>
-      )}
-
-      {segment === "gates" && (
         <div className="space-y-6">
-          {/* Sprint Ledger */}
           <div className="rounded-2xl bg-neutral-950 border border-neutral-800 p-5 sm:p-6 space-y-4 shadow-2xl">
             <div className="flex items-center gap-2">
-              <ScrollText className="w-4 h-4 text-amber-400" />
+              <Ghost className="w-4 h-4 text-amber-400" />
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
-                Sprint Ledger
+                Sealed Containment Dossier
               </span>
             </div>
-            <div className="space-y-3">
-              {phaseDossiersData.map((dossier) => (
+            <p className="text-xs sm:text-sm text-neutral-300 font-sans leading-relaxed">
+              Phase 0.5 sealed the lab by purging stale ghosts, enforcing the 15-spoke canon,
+              shelving combat, and establishing executable verification gates. Below is every artifact
+              that was removed or detached from the active codebase.
+            </p>
+          </div>
+
+          {/* Ghost Purge Manifest */}
+          <div className="rounded-2xl bg-neutral-950 border border-neutral-800 p-5 sm:p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center gap-2">
+              <Trash2 className="w-4 h-4 text-rose-400" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-rose-300">
+                Ghost Purge Manifest
+              </span>
+            </div>
+            <div className="space-y-2">
+              {GHOST_ENTRIES.map((entry) => (
                 <div
-                  key={dossier.phase}
-                  className="p-3 rounded-xl bg-neutral-900/60 border border-neutral-800 flex flex-wrap items-center justify-between gap-3"
+                  key={entry.id}
+                  className="p-3 rounded-xl bg-neutral-900/60 border border-neutral-800 flex flex-wrap items-start gap-3"
                 >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-bold text-neutral-100">{dossier.phase}</span>
-                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded uppercase font-bold border ${
-                        STATUS_CHIP[dossier.status] ?? "bg-neutral-800 text-neutral-300 border-neutral-700"
-                      }`}>
-                        {dossier.status}
-                      </span>
+                  <Ghost className="w-4 h-4 text-rose-400/70 shrink-0 mt-0.5" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-xs font-mono font-bold text-neutral-200">{entry.label}</span>
                     </div>
-                    <p className="text-xs text-neutral-300 font-sans mt-1">{dossier.title}</p>
+                    <p className="text-[11px] text-neutral-400 font-sans mt-1 leading-relaxed">{entry.detail}</p>
                   </div>
-                  <span className="text-[11px] font-mono text-neutral-500 shrink-0">
-                    {dossier.deliverablesCompleted}/{dossier.totalDeliverables} deliverables · {dossier.timeframe}
-                  </span>
                 </div>
               ))}
             </div>
-
-            {phase05 && (
-              <div className="pt-2 border-t border-neutral-800">
-                <p className="text-xs font-mono text-neutral-400 uppercase tracking-wider font-bold mb-2">
-                  Phase 0.5 Sealing Deliverables
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {phase05.deliverables.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className={`p-3 rounded-xl border text-xs ${
-                        item.status === "COMPLETE"
-                          ? "bg-emerald-950/20 border-emerald-500/30"
-                          : "bg-amber-950/20 border-amber-500/40"
-                      }`}
-                    >
-                      <div className="flex items-start gap-2">
-                        {item.status === "COMPLETE" ? (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                        ) : (
-                          <XCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                        )}
-                        <div>
-                          <p className="text-neutral-100 font-semibold font-sans leading-snug">{item.title}</p>
-                          <p className="text-neutral-400 mt-1 font-sans leading-snug">{item.description}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
+          {/* Shelving Rationale */}
+          <div className="rounded-2xl bg-neutral-950 border border-amber-500/30 p-5 sm:p-6 space-y-3 shadow-2xl">
+            <div className="flex items-center gap-2">
+              <ScrollText className="w-4 h-4 text-amber-400" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
+                Shelving Rationale
+              </span>
+            </div>
+            <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/20">
+              <p className="text-xs sm:text-sm text-neutral-300 font-sans leading-relaxed">
+                Combat engine development is <strong className="text-amber-300">paused</strong> — not abandoned.
+                Phase 0.5 sealed the lab first so that no gameplay code could ship on an unstable canon foundation.
+                The combat sandbox, engine playground, and frameworks lab remain accessible through the secondary
+                "More" drawer for inspection, but they are <strong className="text-amber-300">detached from the Ratification Chamber</strong>.
+                They resume when the Architect commands Phase 1.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SEGMENT: Verdict — Canonical 15-spoke truth */}
+      {segment === "verdict" && (
+        <div className="space-y-6">
+          <div className="rounded-2xl bg-neutral-950 border border-neutral-800 p-5 sm:p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center gap-2">
+              <Eye className="w-4 h-4 text-amber-400" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
+                Canonical Wheel Verdict
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-neutral-300 font-sans leading-relaxed">
+              The 15-spoke geometry enforced by the airseal gates. Every record is canonical,
+              fully covered, and carries dual-form lore. No ghost spokes remain.
+            </p>
+          </div>
+
+          {/* Geometry Summary */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-3 rounded-xl bg-neutral-950/80 border border-amber-500/30">
+              <div className="text-[10px] font-mono text-amber-400 font-bold uppercase">Total Spokes</div>
+              <div className="text-lg font-cinzel font-black text-white mt-0.5">15</div>
+              <div className="text-[10px] text-neutral-400 font-mono">12 outer + 3 axis</div>
+            </div>
+            <div className="p-3 rounded-xl bg-neutral-950/80 border border-emerald-500/30">
+              <div className="text-[10px] font-mono text-emerald-400 font-bold uppercase">Geometry</div>
+              <div className="text-lg font-cinzel font-black text-white mt-0.5">Alden North</div>
+              <div className="text-[10px] text-neutral-400 font-mono">12, 1, 2 @ North</div>
+            </div>
+            <div className="p-3 rounded-xl bg-neutral-950/80 border border-neutral-800">
+              <div className="text-[10px] font-mono text-neutral-400 font-bold uppercase">Axis Inner</div>
+              <div className="text-lg font-cinzel font-black text-amber-400 mt-0.5">13, 14, 15</div>
+              <div className="text-[10px] text-neutral-400 font-mono">@ 210/330/90</div>
+            </div>
+            <div className="p-3 rounded-xl bg-neutral-950/80 border border-neutral-800">
+              <div className="text-[10px] font-mono text-neutral-400 font-bold uppercase">Cardinals</div>
+              <div className="text-lg font-cinzel font-black text-amber-400 mt-0.5">1, 4, 7, 10</div>
+              <div className="text-[10px] text-neutral-400 font-mono">Defining mains</div>
+            </div>
+          </div>
+
+          {/* Spoke Ledger */}
+          <div className="rounded-2xl bg-neutral-950 border border-neutral-800 p-5 sm:p-6 shadow-2xl overflow-hidden">
+            <div className="flex items-center gap-2 mb-4">
+              <Crosshair className="w-4 h-4 text-amber-400" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
+                Spoke Ledger
+              </span>
+            </div>
+            <div className="space-y-1.5">
+              {spokesData.map((spoke) => (
+                <div
+                  key={spoke.id}
+                  className="flex items-center gap-3 px-3 py-2 rounded-lg bg-neutral-900/50 border border-neutral-800/50"
+                >
+                  <span className="text-[10px] font-mono font-bold text-amber-400 w-6 text-right shrink-0">
+                    #{spoke.number}
+                  </span>
+                  <div
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ backgroundColor: spoke.color }}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <span className="text-xs font-sans font-semibold text-neutral-200 block truncate">{spoke.name}</span>
+                    <span className="text-[10px] font-mono text-neutral-500">{spoke.dominion} · {spoke.category}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SEGMENT: Gates — Airseal Verification Console (the unique surface) */}
+      {segment === "gates" && (
+        <div className="space-y-6">
           {/* Airseal Verification Console */}
           <div className="rounded-2xl bg-black border border-neutral-800 shadow-2xl overflow-hidden">
             <div className="flex items-center justify-between gap-3 px-4 py-3 bg-neutral-950 border-b border-neutral-800">
@@ -262,21 +309,55 @@ export const SealedLabView: FC<SealedLabViewProps> = ({ playSfx }) => {
         </div>
       )}
 
+      {/* SEGMENT: Covenants — Compact summary, not the full view */}
       {segment === "covenants" && (
-        <div className="space-y-4">
-          <div className="p-4 rounded-2xl bg-neutral-950 border border-neutral-800 flex items-start gap-3">
-            <Flower2 className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
-            <div>
-              <p className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
-                Forever Flowers Archive — 8 Ratified Covenants
-              </p>
-              <p className="text-xs text-neutral-400 font-sans mt-1 leading-relaxed">
-                Forever Flowers are high-prestige, deeply rooted principles. Flower 08 was ratified with the Lab
-                Seal: a gate that cannot fail is a prayer.
-              </p>
+        <div className="space-y-6">
+          <div className="rounded-2xl bg-neutral-950 border border-neutral-800 p-5 sm:p-6 space-y-3 shadow-2xl">
+            <div className="flex items-center gap-2">
+              <Flower2 className="w-4 h-4 text-amber-400" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
+                8 Ratified Covenants
+              </span>
             </div>
+            <p className="text-xs sm:text-sm text-neutral-300 font-sans leading-relaxed">
+              Forever Flowers are high-prestige, deeply rooted principles — not trivial achievements.
+              Each was born from a hard-won design lesson. Flower 08 ("The Self-Proving Gate") was
+              ratified with the Lab Seal itself: <em className="text-amber-300">a gate that cannot fail is a prayer.</em>
+            </p>
           </div>
-          <ForeverFlowersView playSfx={playSfx} />
+
+          {/* Flower Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {foreverFlowersData.map((flower) => (
+              <div
+                key={flower.id}
+                className="p-4 rounded-xl bg-neutral-900/60 border border-neutral-800 space-y-2"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] font-mono font-bold text-amber-400 tracking-wider">
+                    {flower.number}
+                  </span>
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-neutral-400">
+                    {flower.category}
+                  </span>
+                </div>
+                <h3 className="font-cinzel text-sm font-bold text-neutral-100">
+                  {flower.title}
+                </h3>
+                <p className="text-[11px] text-amber-300/70 font-serif italic line-clamp-2">
+                  "{flower.subtitle}"
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* View Full Codex link */}
+          <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/30 text-center">
+            <p className="text-xs font-mono text-amber-400">
+              Full covenant details — lesson learned, core principle, user/agent practices, and golden quotes —
+              are in the <strong>Forever Flowers</strong> tab.
+            </p>
+          </div>
         </div>
       )}
     </div>

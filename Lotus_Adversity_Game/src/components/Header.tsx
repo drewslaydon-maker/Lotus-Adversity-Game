@@ -53,6 +53,7 @@ export const Header: FC<HeaderProps> = ({
   playSfx,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [gitModalOpen, setGitModalOpen] = useState(false);
 
   const navGroups: NavGroup[] = [
@@ -92,7 +93,13 @@ export const Header: FC<HeaderProps> = ({
     }
   ];
 
-  // Flat list to look up the active tab's label
+  const primaryTabs = [
+    { id: "pantheon", label: "Ringwheel", icon: Flame, badge: "Cosmology" },
+    { id: "sealed-lab", label: "Sealed Lab", icon: Cpu, badge: "Sealed" },
+    { id: "roadmap", label: "Roadmap", icon: Milestone, badge: "Pipeline" },
+    { id: "forever-flowers", label: "Flowers", icon: Flower2, badge: "8 Covenants" },
+  ];
+
   const allItems = navGroups.flatMap(g => g.items);
   const currentItem = allItems.find(i => i.id === activeTab || (i.id === "sealed-lab" && (activeTab === "lab" || activeTab === "combat"))) || allItems[0];
   const CurrentIcon = currentItem.icon;
@@ -100,6 +107,7 @@ export const Header: FC<HeaderProps> = ({
   const handleSelectTab = (tabId: string) => {
     setActiveTab(tabId);
     setMobileMenuOpen(false);
+    setMoreMenuOpen(false);
     playSfx("click");
   };
 
@@ -124,7 +132,7 @@ export const Header: FC<HeaderProps> = ({
                   Adversity
                 </span>
                 <span className="text-[9px] sm:text-[10px] font-mono tracking-wider px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400 font-semibold uppercase">
-                  Lab &amp; Frameworks
+                  The Sealed Apparatus
                 </span>
               </div>
               <p className="text-[10px] sm:text-[11px] text-neutral-400 hidden sm:block">
@@ -137,10 +145,10 @@ export const Header: FC<HeaderProps> = ({
           <div className="flex items-center gap-1.5 sm:gap-2.5">
             {/* Desktop Status Pill */}
             <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-xs font-mono">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-neutral-300">Architecture</span>
+              <div className="w-2 h-2 rounded-full bg-amber-400" />
+              <span className="text-neutral-300">Phase 0.5</span>
               <span className="text-[10px] text-amber-400 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-800/60 font-bold">
-                Airsealed v2.6
+                SEALED
               </span>
             </div>
 
@@ -306,41 +314,88 @@ export const Header: FC<HeaderProps> = ({
           </div>
         )}
 
-        {/* DESKTOP CATEGORIZED NAVIGATION (Clean, tactile codex keys) */}
+        {/* DESKTOP PRIMARY 4-NAV + MORE DROPDOWN */}
         <nav className="hidden md:flex items-center justify-between py-2.5 border-t border-neutral-900/90 text-xs">
-          <div className="flex items-center flex-wrap gap-2 lg:gap-3 w-full">
-            {navGroups.map((group, gIdx) => (
-              <div key={group.category} className="flex items-center gap-1.5">
-                {gIdx > 0 && <div className="h-6 w-px bg-neutral-800 mx-1 shrink-0" />}
-                <div className="flex items-center gap-1 bg-neutral-950 p-1 rounded-xl border border-neutral-800 shadow-inner">
-                  {group.items.map((tab) => {
-                    const Icon = tab.icon;
-                    const isActive = activeTab === tab.id || (tab.id === "sealed-lab" && (activeTab === "lab" || activeTab === "combat"));
+          <div className="flex items-center gap-2 lg:gap-3 w-full">
+            {primaryTabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id || (tab.id === "sealed-lab" && (activeTab === "lab" || activeTab === "combat"));
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => handleSelectTab(tab.id)}
+                  className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shadow-sm border ${
+                    isActive
+                      ? "bg-neutral-800 text-amber-300 border-neutral-700 shadow-[0_2px_8px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)] font-bold"
+                      : "bg-neutral-900 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 border-transparent shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
+                  }`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-amber-400" : "text-neutral-500"}`} />
+                  <span>{tab.label}</span>
+                  {tab.badge && (
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-mono ${
+                      isActive ? "bg-amber-900/40 text-amber-200 border border-amber-500/30" : "bg-neutral-950 text-neutral-600 border border-neutral-800"
+                    }`}>
+                      {tab.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+
+            <div className="h-6 w-px bg-neutral-800 mx-1 shrink-0" />
+
+            <div className="relative">
+              <button
+                onClick={() => setMoreMenuOpen(prev => !prev)}
+                className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-2 transition-all cursor-pointer shadow-sm border ${
+                  moreMenuOpen
+                    ? "bg-neutral-800 text-amber-300 border-neutral-700 font-bold"
+                    : "bg-neutral-900 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 border-transparent"
+                }`}
+              >
+                <span>More</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${moreMenuOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              {moreMenuOpen && (
+                <div className="absolute top-full right-0 mt-2 w-72 bg-neutral-950 border border-neutral-800 rounded-xl shadow-2xl z-50 p-3 space-y-3">
+                  {navGroups.map((group) => {
+                    const groupItems = group.items.filter(
+                      (item) => !primaryTabs.some((p) => p.id === item.id)
+                    );
+                    if (groupItems.length === 0) return null;
                     return (
-                      <button
-                        key={tab.id}
-                        onClick={() => handleSelectTab(tab.id)}
-                        className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shadow-sm border ${
-                          isActive
-                            ? "bg-neutral-800 text-amber-300 border-neutral-700 shadow-[0_2px_8px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)] font-bold"
-                            : "bg-neutral-900 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 border-transparent shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
-                        }`}
-                      >
-                        <Icon className={`w-3.5 h-3.5 ${isActive ? "text-amber-400" : "text-neutral-500"}`} />
-                        <span>{tab.label}</span>
-                        {tab.badge && (
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-mono ${
-                            isActive ? "bg-amber-900/40 text-amber-200 border border-amber-500/30" : "bg-neutral-950 text-neutral-600 border border-neutral-800"
-                          }`}>
-                            {tab.badge}
-                          </span>
-                        )}
-                      </button>
+                      <div key={group.category} className="space-y-1.5">
+                        <div className="text-[10px] font-mono uppercase tracking-wider text-amber-500/80 font-bold px-1">
+                          {group.category}
+                        </div>
+                        <div className="space-y-1">
+                          {groupItems.map((tab) => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.id;
+                            return (
+                              <button
+                                key={tab.id}
+                                onClick={() => handleSelectTab(tab.id)}
+                                className={`w-full p-2.5 rounded-xl text-left flex items-center gap-2.5 border transition-all cursor-pointer ${
+                                  isActive
+                                    ? "bg-amber-500/20 border-amber-500/60 text-amber-300 font-bold"
+                                    : "bg-neutral-900/80 border-neutral-800 text-neutral-300 hover:bg-neutral-850"
+                                }`}
+                              >
+                                <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-amber-400" : "text-neutral-400"}`} />
+                                <span className="text-xs">{tab.label}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                     );
                   })}
                 </div>
-              </div>
-            ))}
+              )}
+            </div>
           </div>
         </nav>
 

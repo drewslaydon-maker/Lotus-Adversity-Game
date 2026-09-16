@@ -74,6 +74,14 @@ const ACCOMPLISHMENT_FLOWER_FEEDS = [
     fedFlowerNumber: "01 & 07",
     flowerTitle: "Truth Over Invention & Airsealing",
     connectionRationale: "Continuous verification gates, zero fabricated filler, and strict state alignment between user intent and agent execution."
+  },
+  {
+    phase: "Phase 0.5",
+    milestone: "Lab Seal & The Self-Proving Gate",
+    status: "RATIFIED",
+    fedFlowerNumber: "08",
+    flowerTitle: "The Self-Proving Gate",
+    connectionRationale: "Airseal verification — no checkmark without an exit code. A gate that cannot fail is a prayer: no milestone may claim Verified without `bun run lint` green plus `bun run lab:verify` green."
   }
 ];
 
@@ -107,7 +115,7 @@ export const RoadmapAccomplishmentsView: FC<RoadmapAccomplishmentsViewProps> = (
     const text = `=== ADVERSITY ROADMAP & PIPELINE STATUS ===
 Phase 0: Infrastructure & Core Design — COMPLETED & RATIFIED (3/3 Deliverables Verified)
 Phase 0.5: Lab Sealing & Wheel Verification — SEALED (5/5 Deliverables Verified + Flower 08 Ratified)
-Phase 1: Tactical Core & Combat Engine — PAUSED PENDING LAB SEALING
+Phase 1: Tactical Core & Combat Engine — PAUSED, AWAITING ARCHITECT COMMAND (Phase 0.5 sealed)
 Wheel Matrix: Alden North (12, 1, 2) Verified & Immutable 15-Spoke Geometry Sealed
 Active Forever Flowers: 8 Covenants Ratified`;
     navigator.clipboard.writeText(text);
@@ -117,6 +125,10 @@ Active Forever Flowers: 8 Covenants Ratified`;
   };
 
   const activeSprintDossier = phaseDossiersData.find(d => d.status === "ACTIVE SPRINT" || d.status === "SEALED") || phaseDossiersData[1];
+  const phase0Dossier = phaseDossiersData.find(d => d.phase === "PHASE 0") || phaseDossiersData[0];
+  const phase1Dossier = phaseDossiersData.find(d => d.phase === "PHASE 1");
+  const pct = (completed: number, total: number) =>
+    total === 0 ? 0 : Math.round((completed / total) * 100);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -147,7 +159,8 @@ Active Forever Flowers: 8 Covenants Ratified`;
             </h1>
             <p className="text-xs sm:text-sm text-neutral-300 max-w-3xl leading-relaxed font-sans mt-1">
               Active engineering gates must pass strict inspection before downstream phases unlock. 
-              Combat engine development is paused until <strong className="text-amber-300">Phase 0.5: Lab Sealing</strong> is complete and verified.
+              <strong className="text-amber-300"> Phase 0.5 is SEALED</strong> — all sealing gates green (lint + lab:verify). 
+              Combat engine development remains paused pending the Architect's command to resume Phase 1.
             </p>
           </div>
 
@@ -155,29 +168,37 @@ Active Forever Flowers: 8 Covenants Ratified`;
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
             <div className="p-3 rounded-xl bg-neutral-950/80 border border-emerald-500/30">
               <div className="text-[10px] font-mono text-emerald-400 font-bold uppercase">Phase 0: Infrastructure</div>
-              <div className="text-base sm:text-lg font-cinzel font-black text-white mt-0.5">3 of 3 (100%)</div>
+              <div className="text-base sm:text-lg font-cinzel font-black text-white mt-0.5">
+                {phase0Dossier.deliverablesCompleted} of {phase0Dossier.totalDeliverables} ({pct(phase0Dossier.deliverablesCompleted, phase0Dossier.totalDeliverables)}%)
+              </div>
               <div className="text-[10px] text-neutral-400 font-mono">Ratified &amp; Sealed</div>
             </div>
 
             <div className="p-3 rounded-xl bg-amber-950/30 border border-amber-500/60 ring-1 ring-amber-500/30">
               <div className="text-[10px] font-mono text-amber-400 font-bold uppercase flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping inline-block" />
-                Active Sprint (Phase 0.5)
+                <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+                {activeSprintDossier.status === "SEALED" ? "Phase 0.5: Sealed" : "Active Sprint (Phase 0.5)"}
               </div>
-              <div className="text-base sm:text-lg font-cinzel font-black text-amber-300 mt-0.5">4 of 5 (80%)</div>
-              <div className="text-[10px] text-amber-200/80 font-mono">Lab Sealing &amp; Wheel</div>
+              <div className="text-base sm:text-lg font-cinzel font-black text-amber-300 mt-0.5">
+                {activeSprintDossier.deliverablesCompleted} of {activeSprintDossier.totalDeliverables} ({pct(activeSprintDossier.deliverablesCompleted, activeSprintDossier.totalDeliverables)}%)
+              </div>
+              <div className="text-[10px] text-amber-200/80 font-mono">
+                {activeSprintDossier.status === "SEALED" ? "Sealed &amp; Verified" : "Lab Sealing &amp; Wheel"}
+              </div>
             </div>
 
             <div className="p-3 rounded-xl bg-neutral-950/80 border border-neutral-800">
               <div className="text-[10px] font-mono text-neutral-400 font-bold uppercase">Phase 1: Combat Core</div>
-              <div className="text-base sm:text-lg font-cinzel font-black text-neutral-400 mt-0.5">PAUSED</div>
-              <div className="text-[10px] text-neutral-500 font-mono">Pending Lab Seal</div>
+              <div className="text-base sm:text-lg font-cinzel font-black text-neutral-400 mt-0.5">
+                {phase1Dossier && phase1Dossier.status.includes("PAUSED") ? "PAUSED" : `${phase1Dossier?.deliverablesCompleted ?? 0} of ${phase1Dossier?.totalDeliverables ?? 5}`}
+              </div>
+              <div className="text-[10px] text-neutral-500 font-mono">Awaiting Architect Command</div>
             </div>
 
             <div className="p-3 rounded-xl bg-neutral-950/80 border border-neutral-800">
               <div className="text-[10px] font-mono text-neutral-400 font-bold uppercase">Wheel Geometry</div>
               <div className="text-base sm:text-lg font-cinzel font-black text-amber-400 mt-0.5">Alden North</div>
-              <div className="text-[10px] text-neutral-400 font-mono">12, 1, 2 Matrix Verified</div>
+              <div className="text-[10px] text-neutral-400 font-mono">15-Spoke Immutable</div>
             </div>
           </div>
         </div>
