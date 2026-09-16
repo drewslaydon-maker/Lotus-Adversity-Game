@@ -95,5 +95,17 @@ export const foreverFlowersData: ForeverFlower[] = [
     userPractice: "Guide development in distinct, phased milestones (Phase 0 ratified, Phase 1 combat sprint).",
     agentPractice: "Never leave broken imports, unused artifacts, or stale types in the workspace. Compile and verify every step.",
     goldenQuote: "A clean workbench sharpens the chisel. Keep the room sealed against drift, and the truth will remain clear."
+  },
+  {
+    id: "flower-8-self-proving-gate",
+    number: "FLOWER 08",
+    title: "The Self-Proving Gate",
+    subtitle: "Airseal Verification: No Checkmark Without an Exit Code",
+    category: "Engineering Practice",
+    lessonLearned: "The Lab Sealing sprint proved that progress billed as 'Verified' from a human eyeball can hide stale copy, phantom data reads, and 19-spoke type aliases masquerading as canon. A milestone is only Verified when a machine command proves it.",
+    corePrinciple: "A gate that cannot fail is a prayer. Every sealed claim must terminate in an executable exit code: `bun run lint` for the compiler and `bun run lab:verify` for the canon invariants — the same checks the Ratification Chamber runs in-browser.",
+    userPractice: "Demand a passing exit code before accepting any milestone marked Verified; treat screenshots and hover states as review, never as proof.",
+    agentPractice: "Refuse to mark work Verified without running the available gate commands. When a truth is pressed into status, bind it to an encoded invariant the whole repository can execute.",
+    goldenQuote: "Seal as a command, not a claim. What cannot fail my gate cannot prove my work."
   }
 ];

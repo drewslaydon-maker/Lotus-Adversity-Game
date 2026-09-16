@@ -4,13 +4,14 @@
 The Wheel of Adversity is the central physical artifact and progression engine of the game. It is not a flat UI menu; it is a tangible, interactable mechanism (like an astrolabe or codex dial) that the player meditates upon to unlock skills, manage their path, and observe the world's corruption.
 
 ## 1. Structural Anatomy (15 Spokes + 1 Hub)
-The wheel consists of **4 Outer Quadrants** and **1 Inner Axis**.
-- **Iron (North - Alden):** Spokes 1, 2, 3 (Bastion, Edge, Stance)
-- **Ether (East - Caelen):** Spokes 4, 5, 6 (Sorcery, Inscription, Alchemy)
-- **Frontier (South - Mera):** Spokes 7, 8, 9 (Wayfinding, Forestry, Trapping)
-- **Earth (West - Bram):** Spokes 10, 11, 12 (Quarrying, Smithing, Masonry)
-- **Axis (Center - Soran):** Spokes 13, 14, 15 (Breath, Vessel, Unarmored Stance)
-  *Soran's spokes reside in an inner concentric ring around the absolute center hub.*
+The wheel consists of **4 Outer Quadrants** and **1 Inner Axis**. Quadrants begin with **Alden at True North** and advance clockwise by 30°:
+- **Iron (North - Alden):** Spokes 12, 1, 2 (Diplomat, Bastion, Edge) @ 330°, 0°, 30°
+- **Ether (East - Caelen):** Spokes 3, 4, 5 (Sorcery, Inscription, Alchemy) @ 60°, 90°, 120°
+- **Frontier (South - Mera):** Spokes 6, 7, 8 (Trapping, Wayfinding, Forestry) @ 150°, 180°, 210°
+- **Earth (West - Bram):** Spokes 9, 10, 11 (Masonry, Quarrying, Smithing) @ 240°, 270°, 300°
+  *The cardinal defining mains are Spokes 1 (North), 4 (East), 7 (South), 10 (West).*
+- **Axis (Center - Soran):** Spokes 13, 14, 15 (Breath, Vessel, Unarmored Stance) on an inner concentric ring @ 210°, 330°, 90° around the absolute center hub.
+  *This matrix is enforced by `src/lab/labChecks.ts` — the wheel view and `bun run lab:verify` both read the same invariant.*
 
 ## 2. Esoteric Color Language & States
 The rainbow palette (blue, orange, purple) is discarded in favor of a strict esoteric dialect based on `AGENTS.md`.

@@ -1,13 +1,13 @@
 import { FC, useState } from "react";
 import { CombatEngineView } from "./CombatEngineView";
-import { Swords, Cpu, ShieldAlert, Sparkles, BookOpen, Layers, Terminal } from "lucide-react";
+import { Cpu, ShieldAlert, Terminal, Archive } from "lucide-react";
 
 interface FrameworksLabViewProps {
   playSfx: (type: "anvil" | "scribe" | "shield" | "click") => void;
 }
 
 export const FrameworksLabView: FC<FrameworksLabViewProps> = ({ playSfx }) => {
-  const [labTab, setLabTab] = useState<"crypt-slice" | "specs">("crypt-slice");
+  const [labTab, setLabTab] = useState<"crypt-slice" | "specs">("specs");
 
   return (
     <div className="space-y-6">
@@ -22,8 +22,8 @@ export const FrameworksLabView: FC<FrameworksLabViewProps> = ({ playSfx }) => {
               <span className="font-cinzel text-base font-bold text-neutral-100 uppercase tracking-wider">
                 Frameworks &amp; Interactive Lab
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold">
-                Phase 1 Active Sprint
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-950/60 border border-rose-500/30 text-rose-300 font-bold">
+                Sealed · Combat Shelved
               </span>
             </div>
             <p className="text-xs text-neutral-400 font-sans">
@@ -41,12 +41,12 @@ export const FrameworksLabView: FC<FrameworksLabViewProps> = ({ playSfx }) => {
             }}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
               labTab === "crypt-slice"
-                ? "bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-[0_0_12px_rgba(245,158,11,0.2)]"
+                ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
                 : "bg-neutral-900 text-neutral-400 hover:text-neutral-200 border border-neutral-800"
             }`}
           >
-            <Swords className="w-3.5 h-3.5 text-amber-400" />
-            <span>Alderreach Crypt Slice (Duel)</span>
+            <Archive className="w-3.5 h-3.5 text-rose-400" />
+            <span>Archived Alderreach Duel (Contained)</span>
           </button>
 
           <button
@@ -63,6 +63,21 @@ export const FrameworksLabView: FC<FrameworksLabViewProps> = ({ playSfx }) => {
             <Terminal className="w-3.5 h-3.5 text-amber-400" />
             <span>State Machine &amp; Math Specs</span>
           </button>
+        </div>
+      </div>
+
+      {/* Containment Protocol Banner — Phase 1 is shelved, not cancelled */}
+      <div className="flex items-start gap-3 p-4 rounded-2xl bg-rose-950/30 border border-rose-500/20">
+        <ShieldAlert className="w-5 h-5 text-rose-400 mt-0.5 shrink-0" />
+        <div>
+          <p className="text-xs font-mono font-bold uppercase tracking-wider text-rose-300">
+            Sealed Containment Protocol — Combat is Shelved, Not Cancelled
+          </p>
+          <p className="text-xs text-neutral-400 font-sans mt-1 leading-relaxed">
+            Phase 1 (turn-based grid combat) is <span className="text-rose-300 font-semibold">paused by Architect decree</span>.
+            The duel slice below remains a load-bearing proof-of-concept, now <span className="text-neutral-300 font-semibold">archived</span> —
+            no feature creep, no balancing, no active-sprint claims until Phase 1 is explicitly resumed on the roadmap.
+          </p>
         </div>
       </div>
 

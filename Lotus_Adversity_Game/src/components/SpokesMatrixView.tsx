@@ -11,6 +11,13 @@ export const SpokesMatrixView: FC<SpokesMatrixViewProps> = ({ playSfx }) => {
   const [selectedSpoke, setSelectedSpoke] = useState<Spoke>(spokesData[0]); // Spoke 1: The Bastion
   const [filterDominion, setFilterDominion] = useState<string>("All");
 
+  const consumingAscendant: Record<string, string> = {
+    Iron: "Alden",
+    Ether: "Caelen",
+    Frontier: "Mera",
+    Earth: "Bram",
+  };
+
   const dominionGroups: ("All" | DominionType)[] = ["All", "Iron", "Ether", "Frontier", "Earth"];
 
   const filteredSpokes = spokesData.filter((s) => {
@@ -30,7 +37,7 @@ export const SpokesMatrixView: FC<SpokesMatrixViewProps> = ({ playSfx }) => {
             The 15-Spoke Wheel Matrix
           </h1>
           <p className="text-sm sm:text-base text-neutral-300 leading-relaxed font-sans">
-            In the ancient world, the 12 Spokes operated as a balanced wheel of human virtue and craft. 
+            In the ancient world, the 15 spokes operated as a balanced matrix of human virtue and craft — 12 mortal paths across the Four Dominions, completed by the three-spoke Axis of Soran. 
             When the Broken RingWheel ascended, each of the 4 Cardinal Dominions consumed 3 spokes, 
             bending human capability into imperial servitude. Review each discipline's input/output handshakes, 
             original virtue versus imperial distortion, and milestone unlocks at Levels 25, 50, 75, and 99.
@@ -57,12 +64,12 @@ export const SpokesMatrixView: FC<SpokesMatrixViewProps> = ({ playSfx }) => {
                   : "bg-neutral-950 text-neutral-400 hover:text-neutral-200 border border-neutral-800"
               }`}
             >
-              {dom === "All" ? "All 12 Spokes" : `${dom} Dominion`}
+              {dom === "All" ? "All 15 Spokes" : `${dom} Dominion`}
             </button>
           ))}
         </div>
 
-        {/* Spokes Wheel Selection Bar (12 spokes grid) */}
+        {/* Spokes Wheel Selection Bar (15 spokes grid) */}
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2.5">
             {filteredSpokes.map((spoke) => {
               const isSelected = selectedSpoke.id === spoke.id;
@@ -109,7 +116,7 @@ export const SpokesMatrixView: FC<SpokesMatrixViewProps> = ({ playSfx }) => {
                     className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold" 
                     style={{ backgroundColor: `${selectedSpoke.color}20`, color: selectedSpoke.color, border: `1px solid ${selectedSpoke.color}50` }}
                   >
-                    Spoke #{selectedSpoke.number} • {selectedSpoke.dominion} Dominion ({selectedSpoke.consumedBy})
+                    Spoke #{selectedSpoke.number} • {selectedSpoke.dominion} Dominion (Consumed by {consumingAscendant[selectedSpoke.dominion]})
                   </span>
                   <span className="text-xs font-mono px-2 py-0.5 rounded bg-neutral-900 text-neutral-400 border border-neutral-800">
                     {selectedSpoke.category}
@@ -118,9 +125,6 @@ export const SpokesMatrixView: FC<SpokesMatrixViewProps> = ({ playSfx }) => {
                 <h2 className="text-2xl sm:text-3xl font-cinzel font-black text-neutral-100">
                   {selectedSpoke.name}
                 </h2>
-                <p className="text-sm font-serif italic text-amber-300">
-                  "{selectedSpoke.philosophy}"
-                </p>
               </div>
             </div>
 

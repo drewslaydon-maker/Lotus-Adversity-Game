@@ -1,6 +1,7 @@
 import { FC, useState, useRef, PointerEvent, useEffect } from "react";
-import { WarpedGod, Spoke, DominionType, SpokeId } from "../types";
+import { WarpedGod, Spoke, DominionType } from "../types";
 import { spokesData } from "../data/spokesAndPillarsData";
+import { outerSpokeMatrix, innerSpokeMatrix, statusIdMap } from "../lab/labChecks";
 import { useAppStore } from "../store/useAppStore";
 import { 
   Compass, 
@@ -132,35 +133,11 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
   const innerRadius = 110;
   const innerHubRadius = 55;
 
-  // 12 Outer Spokes positioned sequentially in 4 distinct quadrants starting with Alden at North:
-  // North (330°, 0°, 30°): Iron (Alden) -> 12 (Diplomat), 1 (Bastion - Defining Main North), 2 (Warrior)
-  // East (60°, 90°, 120°): Ether (Caelen) -> 3 (Sorcery), 4 (Inscription - Defining Main East), 5 (Alchemy)
-  // South (150°, 180°, 210°): Frontier (Mera) -> 6 (Trapping), 7 (Wayfinding - Defining Main South), 8 (Forestry)
-  // West (240°, 270°, 300°): Earth (Bram) -> 9 (Masonry), 10 (Quarrying - Defining Main West), 11 (Smithing)
-  const outerSpokeAngles = [
-    { num: 12, angle: 330, dom: "Iron" as DominionType },
-    { num: 1, angle: 0, dom: "Iron" as DominionType },     // True North (Alden's Defining Spoke)
-    { num: 2, angle: 30, dom: "Iron" as DominionType },
-    
-    { num: 3, angle: 60, dom: "Ether" as DominionType },
-    { num: 4, angle: 90, dom: "Ether" as DominionType },   // True East (Caelen's Defining Spoke)
-    { num: 5, angle: 120, dom: "Ether" as DominionType },
-    
-    { num: 6, angle: 150, dom: "Frontier" as DominionType },
-    { num: 7, angle: 180, dom: "Frontier" as DominionType }, // True South (Mera's Defining Spoke)
-    { num: 8, angle: 210, dom: "Frontier" as DominionType },
-    
-    { num: 9, angle: 240, dom: "Earth" as DominionType },
-    { num: 10, angle: 270, dom: "Earth" as DominionType }, // True West (Bram's Defining Spoke)
-    { num: 11, angle: 300, dom: "Earth" as DominionType },
-  ];
-
-  // 3 Inner Spokes (Soran's Axis Hub)
-  const innerSpokeAngles = [
-    { num: 13, angle: 210, dom: "Axis" as DominionType },
-    { num: 14, angle: 330, dom: "Axis" as DominionType },
-    { num: 15, angle: 90, dom: "Axis" as DominionType },
-  ];
+  // Canonical Alden North matrix — SOURCE OF TRUTH imported from src/lab/labChecks.ts.
+  // The same matrix enforces the `bun run lab:verify` gate, so the rendered wheel
+  // can never drift from the sealed invariant.
+  const outerSpokeAngles = outerSpokeMatrix;
+  const innerSpokeAngles = innerSpokeMatrix;
   
   const allSpokeAngles = [...outerSpokeAngles, ...innerSpokeAngles];
 
@@ -197,24 +174,7 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
   const getSpokeColor = (spokeNum: number, dom: DominionType) => {
     // Use the passed in statuses (from Sandbox) or fallback to the global engine state
     const currentStatuses = spokeStatuses || globalSpokeStates;
-    const statusIdMap: Record<number, SpokeId> = {
-      1: "spoke-1-bastion",
-      2: "spoke-2-edge",
-      3: "spoke-3-sorcery",
-      4: "spoke-4-inscription",
-      5: "spoke-5-alchemy",
-      6: "spoke-6-trapping",
-      7: "spoke-7-wayfinding",
-      8: "spoke-8-forestry",
-      9: "spoke-9-masonry",
-      10: "spoke-10-quarrying",
-      11: "spoke-11-smithing",
-      12: "spoke-12-stance",
-      13: "spoke-13-breath",
-      14: "spoke-14-vessel",
-      15: "spoke-15-unarmored"
-    };
-    
+
     // Status can come as lowercase string from legacy prop or Capitalized from global
     const status = currentStatuses === globalSpokeStates 
         ? globalSpokeStates[statusIdMap[spokeNum]]?.toLowerCase() 
@@ -222,7 +182,9 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
 
     if (status === "purified") return "#f59e0b"; // True Amber
     if (status === "corrupted") {
-      // In engine mode, corrupted spokes use the explicit corrupted palette mapped to the god
+      // In the uncorrupted codex view, corruption is suspended — the wheel shows its
+      // healthy dominion palette. Vandalism of the corpse-wheel is preserved here.
+      if (wheelMode === "uncorrupted") return getDominionColor(dom);
       return getCorruptedColor(dom);
     }
     if (status === "locked") return "#262626"; // Very dark neutral (neutral-800)

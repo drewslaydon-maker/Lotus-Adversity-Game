@@ -212,7 +212,7 @@ export const PillarsView: FC = () => {
       {activeSection === "roadmap" && (
         <div className="space-y-8">
           {phaseDossiersData.map((dossier) => {
-            const isComplete = dossier.status === "COMPLETED";
+            const isComplete = dossier.status === "COMPLETED" || dossier.status === "SEALED";
             return (
               <div
                 key={dossier.phase}
@@ -337,7 +337,7 @@ export const PillarsView: FC = () => {
               Time-Spent Progression Formula (Levels 1–99)
             </h2>
             <p className="text-sm text-neutral-300 leading-relaxed font-sans max-w-3xl">
-              Monotonic exponential curve calibrated for deliberate, rewarding progress across all 12 spokes. 
+              Monotonic exponential curve calibrated for deliberate, rewarding progress across all 15 spokes. 
               Designed without artificial multi-million XP bloat, prioritizing distinct milestone mastery tiers 
               at Levels 25, 50, 75, and 99.
             </p>

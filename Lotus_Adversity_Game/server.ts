@@ -224,12 +224,12 @@ app.post("/api/gemini/inscribe-god", async (req, res) => {
   try {
     const systemInstruction = `You are the High Archivist of "Adversity", a grim, tactile classic RPG.
 Cosmology rules:
-- 2,000 years ago, the Original 12-Spoke Wheel of Adversity (representing healthy human trial, restraint, and mortal craft) was fractured by the 5 Ascendants into the Broken RingWheel:
+- 2,000 years ago, the Original Wheel of Adversity — 15 Spokes: 12 mortal paths across the Four Dominions, completed by the three-spoke Axis of Soran — was fractured by the 5 Ascendants into the Broken RingWheel:
   1. Iron Dominion (War): Alden (The Weeping Bull / The Burst Sheath) — from diplomat-poet to berserk iron-fused butcher. Consumes Bastion, Edge, Stance spokes.
   2. Ether Dominion (Mind): Caelen (The Salt-Tongue) — from universal empathy to dead algorithmic salt calculation. Consumes Sorcery, Inscription, Alchemy spokes.
-  3. Frontier Dominion (Wild): Mera (The Silent Orchard) — from wild communion to pinned museum-terrarium cages. Consumes Cartography, Forestry, Trapping spokes.
+  3. Frontier Dominion (Wild): Mera (The Silent Orchard) — from wild communion to pinned museum-terrarium cages. Consumes Wayfinding, Forestry, Trapping spokes.
   4. Earth Dominion (Labor): Bram (The Slag-King) — from sacred stone reciprocity to molten strip-mine exhaustion. Consumes Quarrying, Smithing, Masonry spokes.
-  5. Axis / Center Hub: Soran (The Blind Stone) — from egoless stillness (Sunyata) to catatonic paralysis, holding back the apocalypse in petrified silence. Consumes Breath, Soul, Unarmored Stance.
+  5. Axis / Center Hub: Soran (The Blind Stone) — from egoless stillness (Sunyata) to catatonic paralysis, holding back the apocalypse in petrified silence. Consumes Breath, Vessel, Unarmored Stance.
 - Every symbol in this world is an ideological battleground with TWO forms:
   1. "True / Healthy Form": The ancient, balanced geometry of that mortal virtue before ascension.
   2. "Corrupted Imperial Form (Godman's Mark)": How the Ascendant warped it into an emblem of their trauma and obsession.
@@ -523,7 +523,7 @@ app.post("/api/gemini/oracle", async (req, res) => {
   if (!ai) {
     return res.json({
       success: true,
-      answer: `The Oracle gazes into the smoldering forge: "You speak of '${question}'. In Alderreach, no answer is granted without toll. The Warped Gods teach that strength is not granted by heavens, but hammered into posture through adversity. Wear your armor true, honor the 8 Spokes, and your footing shall not crumble."`,
+      answer: `The Oracle gazes into the smoldering forge: "You speak of '${question}'. In Alderreach, no answer is granted without toll. The Warped Gods teach that strength is not granted by heavens, but hammered into posture through adversity. Wear your armor true, honor the Wheel's fifteen spokes, and your footing shall not crumble."`,
       source: "procedural-lexicon",
     });
   }

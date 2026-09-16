@@ -54,12 +54,12 @@ export const phaseDossiersData: PhaseDossier[] = [
   {
     phase: "PHASE 0.5",
     codename: "Lab Sealing & Wheel Verification",
-    timeframe: "CURRENT ACTIVE SPRINT",
-    status: "ACTIVE SPRINT",
+    timeframe: "RATIFIED — SEALED v1.0",
+    status: "SEALED",
     title: "Lab Sealing & Wheel Foundational Inspection",
     subtitle: "Structural Canon Alignment, Immutable Geometry, & Verification Gate",
-    validationGate: "All 5 Sealing Gates must pass rigorous inspection. No game feature work proceeds until Lab is sealed.",
-    deliverablesCompleted: 4,
+    validationGate: "Airseal verification passed: `bun run lint` green + `bun run lab:verify` green across all 5 gates. Forever Flower 08 ratified. Phase 1 remains shelved pending Architect command.",
+    deliverablesCompleted: 5,
     totalDeliverables: 5,
     deliverables: [
       {
@@ -88,9 +88,9 @@ export const phaseDossiersData: PhaseDossier[] = [
       },
       {
         title: "Git Repository Truth Holder & Credential Transparency",
-        description: "Local git repository synchronized in repo_temp; transparent push instructions provided to user without false assertions of remote push.",
-        acceptanceCriteria: "Local workspace synchronized; status clearly communicated to user with zero fabricated claims.",
-        status: "IN_PROGRESS",
+        description: "Git truth holder established at the repository root with an authenticated GitHub remote; in-app push, zip export, and Mac workflow verified. The repository is the sole Truth Holder — never AI Studio share/export.",
+        acceptanceCriteria: "Root repository synchronized and remotely authenticated; status communicated to user with zero fabricated claims.",
+        status: "COMPLETE",
       },
     ],
   },
@@ -568,7 +568,7 @@ export const pillarsData: Pillar[] = [
     codebaseComplianceChecklist: [
       "Every crafted item must require at least two distinct spoke component inputs",
       "All 12 disciplines must feature Level 25, 50, 75, and 99 milestone perks",
-      "Classless progression state machine allows freely mixing any 12 spoke abilities",
+      "Classless progression state machine allows freely mixing abilities from any of the 15 Spokes",
       "Tavern mercenary companion stats strictly calibrated at 75% player baseline",
     ],
   },

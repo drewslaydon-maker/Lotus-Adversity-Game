@@ -84,8 +84,8 @@ export const ShareProgressSection: FC<ShareProgressSectionProps> = ({
           <p class="text-[10px] text-neutral-300 mt-1">15-Spoke Wheel, 4 Pillars, Calibrated Exponential XP Formula, 28-Pair Matrix verified.</p>
         </div>
         <div class="p-4 rounded-xl bg-neutral-900 border border-amber-500/50">
-          <div class="text-[10px] font-mono text-amber-400 font-bold uppercase">PHASE 0.5: LAB SEALING (ACTIVE SPRINT)</div>
-          <p class="text-[10px] text-neutral-300 mt-1">Alden North Matrix (12, 1, 2) Sealed, Drag Event Decoupled, 15-Spoke Loop Verified.</p>
+          <div class="text-[10px] font-mono text-amber-400 font-bold uppercase">PHASE 0.5: LAB SEALING (SEALED)</div>
+          <p class="text-[10px] text-neutral-300 mt-1">Alden North Matrix (12, 1, 2) Sealed, All 5 Airseal Gates Green, 15-Spoke Loop Verified.</p>
         </div>
         <div class="p-4 rounded-xl bg-neutral-900 border border-neutral-800">
           <div class="text-[10px] font-mono text-neutral-400 font-bold uppercase">PHASE 1: TACTICAL CORE (PAUSED)</div>
@@ -96,7 +96,7 @@ export const ShareProgressSection: FC<ShareProgressSectionProps> = ({
 
     <section class="space-y-4">
       <h2 class="text-xl font-cinzel font-bold text-neutral-200 uppercase border-l-2 border-amber-500 pl-3">
-        The 7 Forever Flowers (Living Covenants)
+        The 8 Forever Flowers (Living Covenants)
       </h2>
       <div class="space-y-3 font-sans text-xs">
         ${foreverFlowersData.map(f => `
@@ -133,7 +133,8 @@ export const ShareProgressSection: FC<ShareProgressSectionProps> = ({
   version: "2.5.0-canonical",
   exportedAt: exportTimestamp,
   phase0: "RATIFIED_COMPLETED",
-  phase1: "COMBAT_SLICE_OPERATIONAL",
+  phase05: "LAB_SEALED_GATES_GREEN",
+  phase1: "COMBAT_SLICE_OPERATIONAL_SHELVED",
   spokes: spokesData,
   pillars: pillarsData,
   pantheon: pantheon,

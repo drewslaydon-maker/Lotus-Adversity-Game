@@ -38,7 +38,7 @@ The Poet died that morning. The Weeping Bull was crowned in blood.`
   {
     id: "chronicle-3-brams-open-kiln",
     title: "The Agony of the Reverent Shaper",
-    category: "The 12 Spokes",
+    category: "The Wheel of Adversity",
     historicalContext: "Oral liturgy whispered in secret among underground quarrymen of the Lower Basalt.",
     characters: ["Bram, The Slag-King"],
     content: `Bram taught the first quarrymen to tap the rock three times with a wooden mallet before setting the chisel. If the stone rang hollow, it was asking for water; if it rang dull, it was sleeping; if it rang sharp, it consented to be split. He wept when an apprentice carelessly fractured a lintel, for he saw every stone as an ancient elder granting a favor to mortal men.
@@ -76,7 +76,7 @@ The High Priests call it 'The Sublime Stillness.' They command pilgrims to prost
   {
     id: "chronicle-5-caelens-salt-meridian",
     title: "The Calcification of Empathy",
-    category: "The 12 Spokes",
+    category: "The Wheel of Adversity",
     historicalContext: "Fragment from the Annals of the Salt-Tongue, preserved in the High Meridian Vaults.",
     characters: ["Caelen, The Salt-Tongue"],
     content: `Caelen was born with the curse of hearing the unsaid thoughts of men. When a mother buried her newborn, Caelen felt the chill in his own arms. When a wounded soldier gasped for water, Caelen tasted dust. He believed that if language could only be perfected—if every human grievance could be precisely defined and translated—war would cease forever.

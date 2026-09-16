@@ -98,7 +98,7 @@ export const RoadmapAccomplishmentsView: FC<RoadmapAccomplishmentsViewProps> = (
   const filteredDossiers = phaseDossiersData.filter(dossier => {
     if (selectedPhaseFilter === "All") return true;
     if (selectedPhaseFilter === "Completed") return dossier.status === "COMPLETED";
-    if (selectedPhaseFilter === "Active") return dossier.status === "ACTIVE SPRINT";
+    if (selectedPhaseFilter === "Active") return dossier.status === "ACTIVE SPRINT" || dossier.status === "SEALED";
     if (selectedPhaseFilter === "Paused") return dossier.status.includes("PAUSED");
     return true;
   });
@@ -106,17 +106,17 @@ export const RoadmapAccomplishmentsView: FC<RoadmapAccomplishmentsViewProps> = (
   const handleCopyStatusDossier = () => {
     const text = `=== ADVERSITY ROADMAP & PIPELINE STATUS ===
 Phase 0: Infrastructure & Core Design — COMPLETED & RATIFIED (3/3 Deliverables Verified)
-Phase 0.5: Lab Sealing & Wheel Verification — ACTIVE SPRINT (4/5 Deliverables Verified)
+Phase 0.5: Lab Sealing & Wheel Verification — SEALED (5/5 Deliverables Verified + Flower 08 Ratified)
 Phase 1: Tactical Core & Combat Engine — PAUSED PENDING LAB SEALING
 Wheel Matrix: Alden North (12, 1, 2) Verified & Immutable 15-Spoke Geometry Sealed
-Active Forever Flowers: 7 Covenants Ratified`;
+Active Forever Flowers: 8 Covenants Ratified`;
     navigator.clipboard.writeText(text);
     setCopiedStatus(true);
     playSfx("scribe");
     setTimeout(() => setCopiedStatus(false), 2500);
   };
 
-  const activeSprintDossier = phaseDossiersData.find(d => d.status === "ACTIVE SPRINT") || phaseDossiersData[1];
+  const activeSprintDossier = phaseDossiersData.find(d => d.status === "ACTIVE SPRINT" || d.status === "SEALED") || phaseDossiersData[1];
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -194,7 +194,7 @@ Active Forever Flowers: 7 Covenants Ratified`;
               <div>
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-amber-500 text-neutral-950">
-                    CURRENT ACTIVE SPRINT
+                    {activeSprintDossier.status === "SEALED" ? "SEALED CONTAINMENT" : "CURRENT ACTIVE SPRINT"}
                   </span>
                   <span className="text-[11px] font-mono text-amber-300/80">
                     {activeSprintDossier.phase}: {activeSprintDossier.codename}
@@ -209,7 +209,7 @@ Active Forever Flowers: 7 Covenants Ratified`;
             {onNavigateToTab && (
               <button
                 onClick={() => {
-                  onNavigateToTab("wheel");
+                  onNavigateToTab("sealed-lab");
                   playSfx("shield");
                 }}
                 className="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs font-mono flex items-center gap-2 transition-all cursor-pointer shadow-md"
@@ -302,7 +302,7 @@ Active Forever Flowers: 7 Covenants Ratified`;
           {filteredDossiers.map((dossier) => {
             const isExpanded = !!expandedPhases[dossier.phase];
             const isCompleted = dossier.status === "COMPLETED";
-            const isActive = dossier.status === "ACTIVE SPRINT";
+            const isActive = dossier.status === "ACTIVE SPRINT" || dossier.status === "SEALED";
 
             return (
               <div
@@ -440,7 +440,7 @@ Active Forever Flowers: 7 Covenants Ratified`;
                       <div className="pt-2 flex justify-end">
                         <button
                           onClick={() => {
-                            onNavigateToTab("wheel");
+                            onNavigateToTab("sealed-lab");
                             playSfx("shield");
                           }}
                           className="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-xs font-mono flex items-center gap-2 transition-all shadow-md cursor-pointer"
@@ -477,7 +477,7 @@ Active Forever Flowers: 7 Covenants Ratified`;
                 Living Covenants Bridge: Accomplishments &rarr; Forever Flowers
               </h3>
               <p className="text-[11px] text-neutral-400 font-sans">
-                Review how technical breakthroughs directly codified our 7 Forever Flowers
+                Review how technical breakthroughs directly codified our 8 Forever Flowers
               </p>
             </div>
           </div>

@@ -8,7 +8,6 @@ import { Header } from "./components/Header";
 import { WarpedPantheonView } from "./components/WarpedPantheonView";
 import { ArmorSymbolsView } from "./components/ArmorSymbolsView";
 import { StorytellingCodex } from "./components/StorytellingCodex";
-import { FrameworksLabView } from "./components/FrameworksLabView";
 import { SpokesMatrixView } from "./components/SpokesMatrixView";
 import { PillarsView } from "./components/PillarsView";
 import { ForeverFlowersView } from "./components/ForeverFlowersView";
@@ -16,6 +15,7 @@ import { RoadmapAccomplishmentsView } from "./components/RoadmapAccomplishmentsV
 import { ShareProgressSection } from "./components/ShareProgressSection";
 import { SystemDirectivesDrawer } from "./components/SystemDirectivesDrawer";
 import { EngineSandboxView } from "./components/EngineSandboxView";
+import { SealedLabView } from "./components/SealedLabView";
 import { Shield } from "lucide-react";
 
 export default function App() {
@@ -74,8 +74,8 @@ export default function App() {
           <PillarsView />
         )}
 
-        {(activeTab === "lab" || activeTab === "combat") && (
-          <FrameworksLabView playSfx={playSfx} />
+        {(activeTab === "sealed-lab" || activeTab === "lab" || activeTab === "combat") && (
+          <SealedLabView playSfx={playSfx} />
         )}
 
         {activeTab === "forever-flowers" && (
@@ -121,7 +121,7 @@ export default function App() {
             <span>•</span>
             <span className="text-[11px] font-mono">15-Spoke Matrix</span>
             <span>•</span>
-            <span className="text-[11px] font-mono text-amber-400">7 Forever Flowers</span>
+            <span className="text-[11px] font-mono text-amber-400">8 Forever Flowers</span>
           </div>
         </div>
       </footer>

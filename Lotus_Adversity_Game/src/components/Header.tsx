@@ -80,21 +80,21 @@ export const Header: FC<HeaderProps> = ({
       category: "Lore & Lab",
       items: [
         { id: "codex", label: "Story Codex", icon: BookOpen, badge: "Oral Lore" },
-        { id: "lab", label: "Combat Engine Lab", icon: Cpu, badge: "Phase 1" },
+        { id: "sealed-lab", label: "Ratification Chamber", icon: Cpu, badge: "Sealed" },
       ]
     },
     {
       category: "Pipeline & Governance",
       items: [
         { id: "roadmap", label: "Roadmap & Pipeline", icon: Milestone, badge: "Status" },
-        { id: "forever-flowers", label: "Forever Flowers", icon: Flower2, badge: "7 Covenants" },
+        { id: "forever-flowers", label: "Forever Flowers", icon: Flower2, badge: "8 Covenants" },
       ]
     }
   ];
 
   // Flat list to look up the active tab's label
   const allItems = navGroups.flatMap(g => g.items);
-  const currentItem = allItems.find(i => i.id === activeTab || (i.id === "lab" && activeTab === "combat")) || allItems[0];
+  const currentItem = allItems.find(i => i.id === activeTab || (i.id === "sealed-lab" && (activeTab === "lab" || activeTab === "combat"))) || allItems[0];
   const CurrentIcon = currentItem.icon;
 
   const handleSelectTab = (tabId: string) => {
@@ -226,15 +226,15 @@ export const Header: FC<HeaderProps> = ({
             </button>
 
             <button
-              onClick={() => handleSelectTab("lab")}
+              onClick={() => handleSelectTab("sealed-lab")}
               className={`py-2 px-1 rounded-lg text-center flex flex-col items-center justify-center transition-all cursor-pointer ${
-                activeTab === "lab" || activeTab === "combat"
+                activeTab === "sealed-lab" || activeTab === "lab" || activeTab === "combat"
                   ? "bg-amber-500/20 text-amber-300 border border-amber-500/50 font-bold"
                   : "text-neutral-400 hover:text-neutral-200 bg-neutral-900/40 border border-neutral-900/60"
               }`}
             >
               <Cpu className="w-4 h-4 mb-0.5" />
-              <span className="text-[10px] leading-tight font-mono">Combat Lab</span>
+              <span className="text-[10px] leading-tight font-mono">Sealed Lab</span>
             </button>
 
             <button
@@ -280,7 +280,7 @@ export const Header: FC<HeaderProps> = ({
                   <div className="grid grid-cols-2 gap-1.5">
                     {group.items.map((tab) => {
                       const Icon = tab.icon;
-                      const isActive = activeTab === tab.id || (tab.id === "lab" && activeTab === "combat");
+                      const isActive = activeTab === tab.id || (tab.id === "sealed-lab" && (activeTab === "lab" || activeTab === "combat"));
                       return (
                         <button
                           key={tab.id}
@@ -315,7 +315,7 @@ export const Header: FC<HeaderProps> = ({
                 <div className="flex items-center gap-1 bg-neutral-950 p-1 rounded-xl border border-neutral-800 shadow-inner">
                   {group.items.map((tab) => {
                     const Icon = tab.icon;
-                    const isActive = activeTab === tab.id || (tab.id === "lab" && activeTab === "combat");
+                    const isActive = activeTab === tab.id || (tab.id === "sealed-lab" && (activeTab === "lab" || activeTab === "combat"));
                     return (
                       <button
                         key={tab.id}

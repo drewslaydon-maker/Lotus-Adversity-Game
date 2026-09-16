@@ -4,11 +4,11 @@ export type ArmorSlot = "Helm" | "Cuirass" | "Pauldrons" | "Gauntlets" | "Greave
 
 export type DominionType = "Iron" | "Ether" | "Frontier" | "Earth" | "Axis";
 
-export type SpokeId = 
-  | "spoke-1-bastion" | "spoke-2-edge" | "spoke-12-stance" | "spoke-3-stance"
+export type SpokeId =
+  | "spoke-1-bastion" | "spoke-2-edge" | "spoke-12-stance"
   | "spoke-3-sorcery" | "spoke-4-inscription" | "spoke-5-alchemy"
-  | "spoke-6-trapping" | "spoke-7-wayfinding" | "spoke-7-cartography" | "spoke-8-forestry" | "spoke-9-trapping"
-  | "spoke-9-masonry" | "spoke-10-quarrying" | "spoke-11-smithing" | "spoke-12-masonry"
+  | "spoke-6-trapping" | "spoke-7-wayfinding" | "spoke-8-forestry"
+  | "spoke-9-masonry" | "spoke-10-quarrying" | "spoke-11-smithing"
   | "spoke-13-breath" | "spoke-14-vessel" | "spoke-15-unarmored";
 
 export interface SymbolForm {
@@ -75,7 +75,7 @@ export interface ArmorSymbol {
 export interface LoreChronicle {
   id: string;
   title: string;
-  category: "The Fall of the Five" | "Chronicles of Alden" | "The 12 Spokes" | "Oral Tradition" | "Apocrypha";
+  category: "The Fall of the Five" | "Chronicles of Alden" | "The Wheel of Adversity" | "Oral Tradition" | "Apocrypha";
   content: string;
   historicalContext: string;
   characters?: string[];
@@ -92,7 +92,7 @@ export interface SpokeMilestone {
 export interface Spoke {
   id: string;
   name: string;
-  number: number; // 1 to 12
+  number: number; // 1 to 15
   dominion: DominionType;
   category: "Gathering" | "Production" | "Combat" | "Esoteric" | "Survival" | "Stillness";
   color: string;
@@ -132,7 +132,7 @@ export interface PhaseDossier {
   phase: string;
   codename: string;
   timeframe: string;
-  status: "COMPLETED" | "ACTIVE SPRINT" | "UPCOMING" | "PAUSED";
+  status: "COMPLETED" | "ACTIVE SPRINT" | "SEALED" | "UPCOMING" | "PAUSED";
   title: string;
   subtitle: string;
   validationGate: string;
