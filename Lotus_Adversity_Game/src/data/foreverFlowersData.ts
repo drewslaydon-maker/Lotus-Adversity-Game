@@ -4,6 +4,8 @@ export interface ForeverFlower {
   title: string;
   subtitle: string;
   category: "Design Doctrine" | "Engineering Practice" | "Agent-User Protocol" | "Cosmological Law";
+  status: "RATIFIED" | "INVALIDATED";
+  revocationNote?: string;
   lessonLearned: string;
   corePrinciple: string;
   userPractice: string;
@@ -18,6 +20,7 @@ export const foreverFlowersData: ForeverFlower[] = [
     title: "The Anti-Hallucination Covenant",
     subtitle: "Truth Over Invention: Push Back and Verify",
     category: "Agent-User Protocol",
+    status: "RATIFIED",
     lessonLearned: "Early iterations risked hallucinating generic dark-fantasy tropes and unsolicited filler modules to match the title 'Adversity' rather than confirming canonical truth. True collaboration requires grounding every system in documented lore.",
     corePrinciple: "Never invent systems to fill a void. If a canonical design is ambiguous, pause, push back, and inspect the foundational truth rather than generating speculative filler.",
     userPractice: "Provide clear architectural constraints, canonical terminology, and prompt guidance when establishing new frameworks.",
@@ -30,6 +33,7 @@ export const foreverFlowersData: ForeverFlower[] = [
     title: "The 0% RNG Covenant",
     subtitle: "Deterministic Resolution: Zero Random Misses",
     category: "Design Doctrine",
+    status: "RATIFIED",
     lessonLearned: "Combat games often default to hidden dice rolls and percentage-based miss rates. In Adversity, random misses destroy tactical player intelligence.",
     corePrinciple: "Attacks always connect. Combat is a contest of posture management, Action Point velocity, telegraphed stance counters, and flat armor mitigation.",
     userPractice: "Evaluate combat balance through deterministic counterplay: Was the telegraph readable? Was the AP budget respected? Was posture managed?",
@@ -42,6 +46,7 @@ export const foreverFlowersData: ForeverFlower[] = [
     title: "The Time-Spent Sanctuary",
     subtitle: "Genuine Mastery: Calibrated Exponential Growth",
     category: "Design Doctrine",
+    status: "RATIFIED",
     lessonLearned: "Generic progression often swings between shallow instant-gratification and absurd 13-million XP grinds designed for engagement metrics. Adversity requires a balanced, calibrated curve.",
     corePrinciple: "Progress reflects uninterrupted player dedication. Milestone tiers at Levels 25, 50, 75, and 99 award non-purchasable cloaks and transformative perks without predatory treadmills.",
     userPractice: "Keep milestone unlocks meaningful, awarding tangible utility perks and non-purchasable prestige cosmetic capes.",
@@ -54,6 +59,7 @@ export const foreverFlowersData: ForeverFlower[] = [
     title: "World Literacy Over HUD Clutter",
     subtitle: "Morrowind Exploration: Unguided Discovery",
     category: "Cosmological Law",
+    status: "RATIFIED",
     lessonLearned: "Floating compass chevrons and minimap GPS lines turn exploration into passive obedience. True immersion demands spatial memory and geological literacy.",
     corePrinciple: "The player finds their way by reading stone strata, listening to acoustic hammer pitches, and following diegetic spoken directions.",
     userPractice: "Design encounters and resource veins linked to natural terrain landmarks (e.g. basalt crags, river bends, glacial scree).",
@@ -66,6 +72,7 @@ export const foreverFlowersData: ForeverFlower[] = [
     title: "The 15-Spoke Symbiosis",
     subtitle: "Closed Economic Loop: No Isolated Silos",
     category: "Engineering Practice",
+    status: "RATIFIED",
     lessonLearned: "Traditional RPGs isolate crafters, gatherers, and combatants into rigid silos. In Adversity, every weapon demands inputs from across the wheel.",
     corePrinciple: "Smithing requires Quarry stone ballast and Forestry charcoal; Inscription requires Quarry pigment and Forestry gallnuts; Combat relies on Alchemical posture draughts.",
     userPractice: "Ensure any newly designed equipment recipe has at least two cross-spoke input handshakes.",
@@ -78,6 +85,7 @@ export const foreverFlowersData: ForeverFlower[] = [
     title: "Sunyata: The Sacred Glass Cannon",
     subtitle: "Weight Class Triforce: High Risk, Pure Flow",
     category: "Design Doctrine",
+    status: "RATIFIED",
     lessonLearned: "Unarmored characters are often treated as either a joke or an invincible dodge-tank. Sunyata must stand as an extreme, deliberate high-skill archetype.",
     corePrinciple: "Zero Armor grants +2 AP (5 AP total) and 4-tile sprint velocity, but takes 100% unmitigated damage. A single missed parry or guard collapse means immediate peril.",
     userPractice: "Test Zero Armor as a true glass cannon: reward precision timing while ensuring mistakes are heavily punished.",
@@ -90,6 +98,7 @@ export const foreverFlowersData: ForeverFlower[] = [
     title: "Airsealing & Architectural Cadence",
     subtitle: "Continuous Integrity: Clean State & Zero Drift",
     category: "Engineering Practice",
+    status: "RATIFIED",
     lessonLearned: "Large projects easily degrade through feature accumulation, orphaned components, and inconsistent types. Continuous airsealing preserves clarity.",
     corePrinciple: "Prune dead code aggressively, verify build and lint status before concluding turns, and structure navigation into clean, intuitive categories.",
     userPractice: "Guide development in distinct, phased milestones (Phase 0 ratified, Phase 1 combat sprint).",
@@ -102,6 +111,8 @@ export const foreverFlowersData: ForeverFlower[] = [
     title: "The Self-Proving Gate",
     subtitle: "Airseal Verification: No Checkmark Without an Exit Code",
     category: "Engineering Practice",
+    status: "INVALIDATED",
+    revocationNote: "Revoked by Architect decree following the Apparatus v2 client rebuild. The gate it ratified could not survive execution against the client it was meant to prove: the wheel renderer, navigation, and governance surfaces it sealed were rebuilt from scratch because they failed the Architect's bar. A self-proving gate can only seal what holds under fire. Pending re-ratification once the fresh client is verified.",
     lessonLearned: "The Lab Sealing sprint proved that progress billed as 'Verified' from a human eyeball can hide stale copy, phantom data reads, and 19-spoke type aliases masquerading as canon. A milestone is only Verified when a machine command proves it.",
     corePrinciple: "A gate that cannot fail is a prayer. Every sealed claim must terminate in an executable exit code: `bun run lint` for the compiler and `bun run lab:verify` for the canon invariants — the same checks the Ratification Chamber runs in-browser.",
     userPractice: "Demand a passing exit code before accepting any milestone marked Verified; treat screenshots and hover states as review, never as proof.",

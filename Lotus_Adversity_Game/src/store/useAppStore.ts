@@ -1,7 +1,6 @@
 import { create } from 'zustand';
-import { SpokeId } from '../types';
 
-export type NodeState = "Locked" | "Corrupted" | "Purified" | "Unknown";
+export type SfxType = "anvil" | "scribe" | "shield" | "click";
 
 interface AppState {
   // UI & Navigation
@@ -13,23 +12,19 @@ interface AppState {
   setSoundEnabled: (enabled: boolean | ((prev: boolean) => boolean)) => void;
 
   // Sound Engine
-  playSfx: (type: "anvil" | "scribe" | "shield" | "click") => void;
-
-  // Engine State (The Mutable Sandbox)
-  spokeStates: Record<SpokeId, NodeState>;
-  setSpokeState: (id: SpokeId, state: NodeState) => void;
+  playSfx: (type: SfxType) => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
   activeTab: "pantheon",
   setActiveTab: (tab) => set({ activeTab: tab }),
   crtEnabled: true,
-  setCrtEnabled: (enabled) => set((state) => ({ 
-    crtEnabled: typeof enabled === "function" ? enabled(state.crtEnabled) : enabled 
+  setCrtEnabled: (enabled) => set((state) => ({
+    crtEnabled: typeof enabled === "function" ? enabled(state.crtEnabled) : enabled,
   })),
   soundEnabled: true,
-  setSoundEnabled: (enabled) => set((state) => ({ 
-    soundEnabled: typeof enabled === "function" ? enabled(state.soundEnabled) : enabled 
+  setSoundEnabled: (enabled) => set((state) => ({
+    soundEnabled: typeof enabled === "function" ? enabled(state.soundEnabled) : enabled,
   })),
 
   playSfx: (type) => {
@@ -85,26 +80,4 @@ export const useAppStore = create<AppState>((set, get) => ({
       // Audio context might be restricted before user gesture
     }
   },
-
-  // Engine State
-  spokeStates: {
-    "spoke-1-bastion": "Corrupted",
-    "spoke-2-edge": "Corrupted",
-    "spoke-12-stance": "Corrupted",
-    "spoke-3-sorcery": "Corrupted",
-    "spoke-4-inscription": "Corrupted",
-    "spoke-5-alchemy": "Corrupted",
-    "spoke-6-trapping": "Corrupted",
-    "spoke-7-wayfinding": "Corrupted",
-    "spoke-8-forestry": "Corrupted",
-    "spoke-9-masonry": "Corrupted",
-    "spoke-10-quarrying": "Corrupted",
-    "spoke-11-smithing": "Corrupted",
-    "spoke-13-breath": "Corrupted",
-    "spoke-14-vessel": "Corrupted",
-    "spoke-15-unarmored": "Corrupted",
-  },
-  setSpokeState: (id, state) => set((s) => ({
-    spokeStates: { ...s.spokeStates, [id]: state }
-  }))
 }));

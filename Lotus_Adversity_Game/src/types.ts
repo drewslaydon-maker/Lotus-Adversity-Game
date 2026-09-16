@@ -1,3 +1,5 @@
+import type { GlyphKey } from "./symbols/glyphKeys";
+
 export type ArmorWeightClass = "Heavy" | "Medium" | "Light" | "Zero";
 
 export type ArmorSlot = "Helm" | "Cuirass" | "Pauldrons" | "Gauntlets" | "Greaves" | "Shield";
@@ -17,7 +19,7 @@ export interface SymbolForm {
   geometry: string;
   visualDescription: string;
   inUniverseMeaning: string;
-  svgShapeType: "trapezoid" | "diamond" | "crescents" | "horned-calyx" | "wedge" | "lotus" | "circle" | "caliper";
+  glyph: GlyphKey;
   accentColor: string;
 }
 
@@ -139,34 +141,4 @@ export interface PhaseDossier {
   deliverablesCompleted: number;
   totalDeliverables: number;
   deliverables: PhaseDeliverable[];
-}
-
-export interface CombatDuelState {
-  playerHp: number;
-  maxPlayerHp: number;
-  playerPosture: number;
-  maxPlayerPosture: number;
-  playerAp: number;
-  maxPlayerAp: number;
-  playerWeightClass: ArmorWeightClass;
-
-  enemyName: string;
-  enemyHp: number;
-  maxEnemyHp: number;
-  enemyPosture: number;
-  maxEnemyPosture: number;
-
-  turn: number;
-  combatLogs: string[];
-  isGuarding: boolean;
-  status: "active" | "victory" | "defeat";
-}
-
-export interface AlphaRegistration {
-  handle: string;
-  email: string;
-  preferredPlaystyle: string;
-  platform: string;
-  token: string;
-  joinedAt: string;
 }

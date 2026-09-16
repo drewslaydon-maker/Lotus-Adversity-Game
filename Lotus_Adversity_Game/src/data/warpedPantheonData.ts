@@ -26,7 +26,7 @@ export const initialWarpedPantheon: WarpedGod[] = [
       geometry: "Broad grounded trapezoid with unmarred symmetry, housing a golden balanced seed inside.",
       visualDescription: "An unyielding, harmonious sanctuary of patience. A broad downward-pointing anvil holding an unbroken core.",
       inUniverseMeaning: "Represents Alden's prime as the diplomat-poet who bore the suffering of entire realms so common blood would not flow.",
-      svgShapeType: "trapezoid",
+      glyph: "trapezoid",
       accentColor: "#f59e0b"
     },
     corruptedSymbol: {
@@ -35,7 +35,7 @@ export const initialWarpedPantheon: WarpedGod[] = [
       geometry: "A burst martial ring shattered by two jagged upward-thrusting bone spikes, with tears of molten lead.",
       visualDescription: "The circular perimeter of martial discipline violently torn apart from within by horned brutality.",
       inUniverseMeaning: "The emblem of Alden's ascension: restraint shattered, mercy discarded, the monster permanently unsheathed.",
-      svgShapeType: "horned-calyx",
+      glyph: "horned-calyx",
       accentColor: "#ef4444"
     },
     tacticalBlessing: {
@@ -69,7 +69,7 @@ export const initialWarpedPantheon: WarpedGod[] = [
       geometry: "Gentle sinusoidal curve woven through an open circular aura.",
       visualDescription: "Harmonious resonance where intellect flows like water, listening before calculating.",
       inUniverseMeaning: "The ancient discipline of mental clarity, empathy, and intuitive sorcery before logic was weaponized into cold tyranny.",
-      svgShapeType: "circle",
+      glyph: "circle",
       accentColor: "#38bdf8"
     },
     corruptedSymbol: {
@@ -78,7 +78,7 @@ export const initialWarpedPantheon: WarpedGod[] = [
       geometry: "A razor-straight vertical meridian split by a descending triangular salt-wedge.",
       visualDescription: "Cold, geometric dissection pinning thought into sterile mathematical grids.",
       inUniverseMeaning: "The mark of Caelen's calcification: intellect severed from empathy, reducing all living magic to dead algorithmic constraints.",
-      svgShapeType: "wedge",
+      glyph: "sextant",
       accentColor: "#0284c7"
     },
     tacticalBlessing: {
@@ -112,7 +112,7 @@ export const initialWarpedPantheon: WarpedGod[] = [
       geometry: "An open four-leaf spiral blooming outward without boundary borders.",
       visualDescription: "Fluid organic branches pointing in all directions, celebrating untamed wilderness and discovery.",
       inUniverseMeaning: "The mortal art of moving with the wild, respecting prey, and reading the terrain without subjugating it.",
-      svgShapeType: "circle",
+      glyph: "antler",
       accentColor: "#34d399"
     },
     corruptedSymbol: {
@@ -121,7 +121,7 @@ export const initialWarpedPantheon: WarpedGod[] = [
       geometry: "Two interlocking curved caliper jaws tightening around a withered sprout.",
       visualDescription: "A brutal cage-like geometry representing nature caught in an unyielding imperial clamp.",
       inUniverseMeaning: "Mera's imperial seal: every tree numbered, every beast tagged, wilderness choked into museum-like paralysis.",
-      svgShapeType: "caliper",
+      glyph: "caliper",
       accentColor: "#10b981"
     },
     tacticalBlessing: {
@@ -155,7 +155,7 @@ export const initialWarpedPantheon: WarpedGod[] = [
       geometry: "A level horizontal base supporting an upright equilateral prism with gentle ventilation curves.",
       visualDescription: "Sacred stonework rooted in deep balance, respecting the mountain's natural fissures.",
       inUniverseMeaning: "Mortal craftsmanship honoring the earth: every cut deliberate, every stone placed to outlive centuries without scar.",
-      svgShapeType: "trapezoid",
+      glyph: "chisel",
       accentColor: "#fb923c"
     },
     corruptedSymbol: {
@@ -164,7 +164,7 @@ export const initialWarpedPantheon: WarpedGod[] = [
       geometry: "A heavy, downward-crushing triangle splitting an anvil base, with jagged fissures leaking molten channels.",
       visualDescription: "Industrial brute force: crushing structural mass forcing ore past its breaking point.",
       inUniverseMeaning: "Bram's tragic mark: unmitigated extraction, perpetual smelting, and generations burned as kindling for the imperial machine.",
-      svgShapeType: "wedge",
+      glyph: "wedge",
       accentColor: "#ea580c"
     },
     tacticalBlessing: {
@@ -198,7 +198,7 @@ export const initialWarpedPantheon: WarpedGod[] = [
       geometry: "A perfect circle enclosing an open, balanced lotus cup.",
       visualDescription: "Pure unarmored equanimity: the mind resting at the center of all storms.",
       inUniverseMeaning: "The original 12th hub of the wheel: where the warrior lays down the blade, breathing in stillness and mastering the zero-weight form.",
-      svgShapeType: "lotus",
+      glyph: "lotus",
       accentColor: "#e2e8f0"
     },
     corruptedSymbol: {
@@ -207,7 +207,7 @@ export const initialWarpedPantheon: WarpedGod[] = [
       geometry: "A circular ouroboros split down the vertical axis by a razor void-channel with a motionless suspended drop.",
       visualDescription: "Total stillness frozen into dead catatonia: a cold, petrified paralysis radiating zero salvation.",
       inUniverseMeaning: "The hollow idol of the Center: a false peace born of guilt and cosmic numbness, where no prayer is ever heard.",
-      svgShapeType: "lotus",
+      glyph: "lotus",
       accentColor: "#94a3b8"
     },
     tacticalBlessing: {

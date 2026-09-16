@@ -26,6 +26,13 @@ html, body {
   .font-pixel {
     font-family: 'Press Start 2P', monospace;
   }
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
   .crt-scanlines {
     pointer-events: none;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%),

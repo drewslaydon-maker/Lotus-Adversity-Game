@@ -1,4 +1,8 @@
 import { spokesData } from "../data/spokesAndPillarsData";
+import { initialWarpedPantheon } from "../data/warpedPantheonData";
+import { initialArmorSymbols } from "../data/armorSymbolsData";
+import { spokeSymbolsData } from "../data/spokeSymbolsData";
+import { GLYPH_KEY_SET } from "../symbols/glyphKeys";
 import { DominionType, SpokeId } from "../types";
 
 // ============================================================================
@@ -35,11 +39,24 @@ export const outerSpokeMatrix: CardinalSpoke[] = [
 ];
 
 // Soran's Axis — 3 inner spokes orbiting the absolute center hub (Soran).
+// Sealed seating: the Axis GUARDS THE SEAMS, never riding an outer spoke's ray.
+//   225 = seam between #8 Forestry and #9 Masonry  → Breath (13)   — stillness at the habitation boundary
+//   345 = seam between #12 Stance and #1 Bastion  → Vessel (14)   — the composed cup flanked by poise and armor
+//   105 = seam between #4 Inscription & #5 Alchemy → Unarmored (15) — the naked blade inside the cold mind's workshop
+// Each inner ray extends the outer partition seam, so stillness rules the margins, not the numbers.
 export const innerSpokeMatrix: CardinalSpoke[] = [
-  { num: 13, angle: 210, dom: "Axis" },
-  { num: 14, angle: 330, dom: "Axis" },
-  { num: 15, angle: 90, dom: "Axis" },
+  { num: 13, angle: 225, dom: "Axis" },
+  { num: 14, angle: 345, dom: "Axis" },
+  { num: 15, angle: 105, dom: "Axis" },
 ];
+
+// Canonical inner seats — the Axis guards the seams, never an outer spoke's ray.
+// 13 Breath @ 225 (8/9 seam), 14 Vessel @ 345 (12/1 seam), 15 Unarmored @ 105 (4/5 seam).
+export const innerSeamAngles: Record<number, number> = {
+  13: 225,
+  14: 345,
+  15: 105,
+};
 
 export const cardinalMainNumbers: number[] = [1, 4, 7, 10];
 
@@ -137,6 +154,12 @@ function geometryGate(): LabGateResult {
     else if (spoke.dominion !== c.dom) details.push(`Spoke #${spoke.number} dominion is ${spoke.dominion}, expected ${c.dom}.`);
   }
 
+  for (const c of innerSpokeMatrix) {
+    const sealed = innerSeamAngles[c.num];
+    if (sealed === undefined) details.push(`Inner Spoke #${c.num} has no sealed seam angle.`);
+    else if (c.angle !== sealed) details.push(`Inner Spoke #${c.num} sits at ${c.angle}°, sealed seam decree requires ${sealed}° (guard the seams, never ride an outer ray).`);
+  }
+
   const mainsOk = cardinalMains.every((n) => cardinalMainNumbers.includes(n));
   if (!mainsOk) details.push(`Defining cardinal spokes misaligned: got ${cardinalMains.join(", ")}, expected ${cardinalMainNumbers.join(", ")}.`);
 
@@ -196,8 +219,129 @@ function dataGate(): LabGateResult {
   };
 }
 
+// ============================================================================
+// HERALDRY AUDIT — the One-Heraldry-One-Primitive Rule (VISUAL_DESIGN_MASTER.md).
+// A "heraldic identity" is a patron's body of work: an Ascendant may echo a
+// primitive onto that patron's own armor relics, but two DIFFERENT identities
+// must never resolve to the same primitive. Each of the 15 spoke disciplines is
+// its own identity and must be globally unique.
+// The registry audit also proves every form's glyph is registered. The ledger
+// below may only shrink; a stale row fails the gate on purpose.
+// ============================================================================
+
+export type HeraldryFamily = "Divine" | "Armor" | "Discipline";
+
+export interface HeraldryFormRef {
+  family: HeraldryFamily;
+  entity: string;
+  group: string; // heraldic identity — forms in the same group may share a primitive
+  glyph: string;
+}
+
+export interface SymbolCollision {
+  primitive: string;
+  members: string[]; // sorted "family:entity" keys
+}
+
+// Known collisions scheduled for redesign. REMOVE entries as they are purified.
+// EMPTY as of the discipline-glyph pass: all five original groups were purified.
+export const KNOWN_COLLISIONS: SymbolCollision[] = [];
+
+const divineGroup = (dominion: string) => `divine:${dominion}`;
+const disciplineGroup = (spokeId: string) => `disc:${spokeId}`;
+
+function collectHeraldryForms(): HeraldryFormRef[] {
+  const refs: HeraldryFormRef[] = [];
+  for (const g of initialWarpedPantheon) {
+    const group = divineGroup(g.dominion);
+    refs.push({ family: "Divine", entity: g.id, group, glyph: g.trueSymbol.glyph });
+    refs.push({ family: "Divine", entity: g.id, group, glyph: g.corruptedSymbol.glyph });
+  }
+  for (const a of initialArmorSymbols) {
+    const group = divineGroup(a.dominion);
+    refs.push({ family: "Armor", entity: a.id, group, glyph: a.trueForm.glyph });
+    refs.push({ family: "Armor", entity: a.id, group, glyph: a.corruptedForm.glyph });
+  }
+  for (const s of spokeSymbolsData) {
+    const group = disciplineGroup(s.spokeId);
+    refs.push({ family: "Discipline", entity: s.spokeId, group, glyph: s.trueSymbol.glyph });
+    refs.push({ family: "Discipline", entity: s.spokeId, group, glyph: s.corruptedSymbol.glyph });
+  }
+  return refs;
+}
+
+export function computeCollisions(): SymbolCollision[] {
+  const byGlyph = new Map<string, Map<string, Set<string>>>();
+  for (const ref of collectHeraldryForms()) {
+    const groups = byGlyph.get(ref.glyph) ?? new Map<string, Set<string>>();
+    const members = groups.get(ref.group) ?? new Set<string>();
+    members.add(`${ref.family}:${ref.entity}`);
+    groups.set(ref.group, members);
+    byGlyph.set(ref.glyph, groups);
+  }
+  return [...byGlyph.entries()]
+    .filter(([, groups]) => groups.size > 1)
+    .map(([primitive, groups]) => ({
+      primitive,
+      members: [...groups.values()].flatMap((set) => [...set]).sort(),
+    }))
+    .sort((a, b) => a.primitive.localeCompare(b.primitive));
+}
+
+function collisionKey(c: SymbolCollision): string {
+  return `${c.primitive}:${c.members.join("|")}`;
+}
+
+function heraldryGate(): LabGateResult {
+  const details: string[] = [];
+
+  const refs = collectHeraldryForms();
+  const unregistered = refs.filter((r) => !GLYPH_KEY_SET.has(r.glyph));
+  for (const r of unregistered) {
+    details.push(`Unregistered glyph "${r.glyph}" on ${r.family}:${r.entity} — add it to src/symbols/glyphKeys.ts.`);
+  }
+
+  const disciplineCount = spokeSymbolsData.length;
+  if (disciplineCount !== 15) {
+    details.push(`Discipline heraldry census is ${disciplineCount}, expected 15 (one per spoke).`);
+  }
+  const disciplineNumbers = [...new Set(spokeSymbolsData.map((s) => s.number))].sort((a, b) => a - b);
+  const expectedNumbers = Array.from({ length: 15 }, (_, i) => i + 1);
+  if (disciplineNumbers.length !== 15 || !disciplineNumbers.every((n, i) => n === expectedNumbers[i])) {
+    details.push(`Discipline heraldry does not cover spokes #1..#15 exactly: [${disciplineNumbers.join(", ")}].`);
+  }
+
+  const actual = computeCollisions();
+  const actualKeys = new Set(actual.map(collisionKey));
+  const knownKeys = new Set(KNOWN_COLLISIONS.map(collisionKey));
+
+  const newCollisions = actual.filter((c) => !knownKeys.has(collisionKey(c)));
+  const staleLedger = KNOWN_COLLISIONS.filter((c) => !actualKeys.has(collisionKey(c)));
+
+  for (const c of newCollisions) {
+    details.push(`NEW primitive collision on "${c.primitive}": ${c.members.join(", ")} — redesign one identity (One-Heraldry-One-Primitive Rule).`);
+  }
+  for (const c of staleLedger) {
+    details.push(`Ledger entry no longer collides and must be removed: "${c.primitive}" (${c.members.join(", ")}).`);
+  }
+
+  const pass = details.length === 0;
+  const groupCount = new Set(refs.map((r) => r.group)).size;
+  return {
+    id: "heraldry",
+    title: "Heraldry Uniqueness — Three Families, One Primitive Per Identity (Ledger Only Shrinks)",
+    pass,
+    details: pass
+      ? [
+          `${refs.length} forms across ${groupCount} heraldic identities; zero primitive collisions.`,
+          "Discipline registry covers 15 spokes; every glyph key is registered. The ledger is empty and may never grow.",
+        ]
+      : details,
+  };
+}
+
 export function runLabVerification(): LabVerification {
-  const gates = [censusGate(), numericGate(), geometryGate(), idsGate(), dataGate()];
+  const gates = [censusGate(), numericGate(), geometryGate(), idsGate(), dataGate(), heraldryGate()];
   return {
     gates,
     overall: gates.every((g) => g.pass),

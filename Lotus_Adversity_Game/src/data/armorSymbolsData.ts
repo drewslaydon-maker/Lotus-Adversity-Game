@@ -16,7 +16,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "Broad grounded trapezoid with unmarred symmetry, enclosing an intact golden seed core.",
       visualDescription: "Solid, unmoving bastion with a centered heart. A sanctuary of divine patience.",
       inUniverseMeaning: "Alden in his mortal youth as the Diplomat-Poet. He bore the weight of empires upon his shoulders without breaking. Heavy armor was forged not as an engine of war, but as a peaceful redoubt to shield the vulnerable.",
-      svgShapeType: "trapezoid",
+      glyph: "trapezoid",
       accentColor: "#f59e0b"
     },
     corruptedForm: {
@@ -25,7 +25,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "Trapezoid distorted by iron barbs and inward-biting rivets that fuse into the wearer's skin.",
       visualDescription: "The plate becomes an agonizing iron maiden. The balanced seed is choked by rusted chains.",
       inUniverseMeaning: "The armor after the massacre: plate riveted directly through flesh into bone so it can never be removed in peace.",
-      svgShapeType: "trapezoid",
+      glyph: "trapezoid",
       accentColor: "#b45309"
     },
     forgingIncantation: "Let the hammer strike seven times cold, three times quenched in tears of statecraft. Bear the insolence of kings and do not yield an inch of soil.",
@@ -46,7 +46,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "Sharp vertical diamond bisected by a centered hairline groove, holding perfect equilibrium.",
       visualDescription: "A taut, perfectly disciplined diamond poised between speech and steel.",
       inUniverseMeaning: "The years of strain. The diplomat realizing his words are failing, yet holding back the blade through sheer willpower. The edge remains half-sheathed, balancing the weight of compromise against imminent blood.",
-      svgShapeType: "diamond",
+      glyph: "diamond",
       accentColor: "#fbbf24"
     },
     corruptedForm: {
@@ -55,7 +55,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "A cracked diamond whose central bisection line has snapped into an asymmetrical jagged fang.",
       visualDescription: "The restraint has failed. The scabbard has split open, leaking jagged splinters of steel.",
       inUniverseMeaning: "The moment the treaty broke: the hand trembled, the hilt was gripped in agony, and the edge was partially drawn in blind panic.",
-      svgShapeType: "diamond",
+      glyph: "diamond",
       accentColor: "#f97316"
     },
     forgingIncantation: "Fold the high-carbon billet ninety times over folded ash. Keep the tension taut as a drawn lute string, but let the scabbard lock tight until honor is dead.",
@@ -76,7 +76,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "Two graceful sweeping arcs curving in mirrored harmony, resembling an untethered eagle wing.",
       visualDescription: "Elegantly curved sweeps embodying swift footwork, diplomatic haste, and light stride.",
       inUniverseMeaning: "The original virtue of the light heraldry: travel lightly, outpace aggression, arrive before war can erupt.",
-      svgShapeType: "crescents",
+      glyph: "crescents",
       accentColor: "#38bdf8"
     },
     corruptedForm: {
@@ -85,7 +85,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "Two dynamic, curved crescent arcs violently tearing past each other like unsheathed raking fangs.",
       visualDescription: "Raking crescent shears that resemble torn scabbards and exposed fangs.",
       inUniverseMeaning: "The breaking point: Alden cast off his shield, tore away his breastplate, and drew the naked edge. Pure lethal urgency; no defense remains, only the desperate strike.",
-      svgShapeType: "crescents",
+      glyph: "crescents",
       accentColor: "#ef4444"
     },
     forgingIncantation: "Strip away the bronze; shave the iron until it is paper-thin. When they slaughter your treaty, throw the scabbard in their teeth and run them down on barefoot glass.",
@@ -106,7 +106,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "An unbroken ring surmounted by twin rounded olive-leaf arches.",
       visualDescription: "A gentle circular coronet symbolizing peaceful communion and united peoples.",
       inUniverseMeaning: "The garland Alden wore at the Grand Conciliation before the betrayal at the altar.",
-      svgShapeType: "circle",
+      glyph: "diadem",
       accentColor: "#a3e635"
     },
     corruptedForm: {
@@ -115,7 +115,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "The outer martial ring violently burst open by two jagged upward-thrusting bone spikes, with tears of molten lead.",
       visualDescription: "The skull ruptured into bone horns; the circle of discipline shattered forever.",
       inUniverseMeaning: "The full imperial seal of the Weeping Bull: Alden ascended into eternal frenzy, weeping tears of molten iron as he butchers everything in his path.",
-      svgShapeType: "horned-calyx",
+      glyph: "horned-calyx",
       accentColor: "#dc2626"
     },
     forgingIncantation: "Quench in the blood of an unavenged brother. Drive the spikes through the brow until the screams turn into thunder.",
@@ -138,7 +138,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "A pristine outer circle enclosing an open, balanced lotus cup holding a single drop of dew.",
       visualDescription: "Unbroken concentric perfection. Breath flowing freely into the empty heart.",
       inUniverseMeaning: "The 12th hub of the ancient wheel: Sunyata (egoless stillness). The master unarmored stance where the body requires no iron because it clings to no fear.",
-      svgShapeType: "lotus",
+      glyph: "lotus",
       accentColor: "#f8fafc"
     },
     corruptedForm: {
@@ -147,7 +147,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "A circular ouroboros split down the vertical axis by a razor void-channel with a motionless suspended drop.",
       visualDescription: "A fractured ring surrounding a static, petrified drop that cannot fall or move.",
       inUniverseMeaning: "The tragedy of the Center: Soran absorbed the sins of the four warring gods and froze in eternal catatonic stone. Stillness became dead paralysis; peace became a silent prison.",
-      svgShapeType: "lotus",
+      glyph: "lotus",
       accentColor: "#94a3b8"
     },
     forgingIncantation: "Weave no metal; spin only unbleached flax soaked in mountain mist. Cling to nothing, defend nothing, let the strike pass through empty air.",
@@ -170,7 +170,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "Level bedrock base supporting an upright equilateral prism with gentle ventilation curves.",
       visualDescription: "Sacred stonework rooted in reciprocity. Stone cut along natural cleavage planes without waste.",
       inUniverseMeaning: "Bram as the master builder: every quarry block treated as a loan from the mountain, every blade quenched with reverence.",
-      svgShapeType: "wedge",
+      glyph: "wedge",
       accentColor: "#fb923c"
     },
     corruptedForm: {
@@ -179,7 +179,7 @@ export const initialArmorSymbols: ArmorSymbol[] = [
       geometry: "A massive, downward-crushing triangle splitting an anvil base, with jagged fissures leaking molten channels.",
       visualDescription: "Crushing structural mass and unyielding industrial heat forcing the mountain to yield.",
       inUniverseMeaning: "Bram's self-sacrifice warped into monstrosity: a walking blast furnace devouring entire mountain ranges in unending, molten toil.",
-      svgShapeType: "wedge",
+      glyph: "wedge",
       accentColor: "#ea580c"
     },
     forgingIncantation: "Pour basalt slag into the mold until the crucible cracks. When your apprentice drops from heat-stroke, shovel him into the flue to keep the emperor's road paved.",
