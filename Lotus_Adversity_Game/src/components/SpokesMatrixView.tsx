@@ -24,10 +24,10 @@ export const SpokesMatrixView: FC<SpokesMatrixViewProps> = ({ playSfx }) => {
         <div className="max-w-3xl space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-xs font-mono text-amber-400">
             <Compass className="w-3.5 h-3.5 text-amber-400" />
-            <span>Phase 0 Architecture • 12-Spoke Wheel Blueprint</span>
+            <span>Phase 0 Architecture • 15-Spoke Wheel Blueprint</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-cinzel font-black tracking-wide text-neutral-100 uppercase">
-            The 12-Spoke Wheel Matrix
+            The 15-Spoke Wheel Matrix
           </h1>
           <p className="text-sm sm:text-base text-neutral-300 leading-relaxed font-sans">
             In the ancient world, the 12 Spokes operated as a balanced wheel of human virtue and craft. 

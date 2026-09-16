@@ -3,11 +3,11 @@ import { LoreChronicle } from "../types";
 export const initialLoreChronicles: LoreChronicle[] = [
   {
     id: "chronicle-1-breaking-of-the-wheel",
-    title: "The Fracturing of the 12-Spoke Wheel",
+    title: "The Fracturing of the 15-Spoke Wheel",
     category: "The Fall of the Five",
     historicalContext: "Inscribed in archaic cuneiform upon the outer ring of the High Spire, dated approximately 2,000 years before the present age.",
     characters: ["Alden", "Caelen", "Mera", "Bram", "Soran"],
-    content: `Before the world was partitioned by the iron borders of the Four Dominions, there existed only the 12-Spoke Wheel of Adversity. It was not a religion of gods; it was the balanced geometry of mortal capability. To quarry was to converse with bedrock; to forge was to honor the ore; to hold the blade was to pray that the scabbard might never be emptied.
+    content: `Before the world was partitioned by the iron borders of the Four Dominions, there existed only the 15-Spoke Wheel of Adversity. It was not a religion of gods; it was the balanced geometry of mortal capability. To quarry was to converse with bedrock; to forge was to honor the ore; to hold the blade was to pray that the scabbard might never be emptied.
 
 At the hub of that wheel stood the five companions. They were mortals—the finest of their epoch. Alden, whose diplomatic verse silenced bloodthirsty kings; Caelen, who felt the heartbeat of strangers in his own chest; Mera, who walked alongside dire-elk as sister; Bram, who chiseled aqueducts that outlived dynasties; and Soran, the silent listener who held their restless spirits together.
 

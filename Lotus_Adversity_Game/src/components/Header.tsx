@@ -1,4 +1,4 @@
-import { FC, Dispatch, SetStateAction, useState } from "react";
+import { FC, useState } from "react";
 import { 
   Flame, 
   Shield, 
@@ -15,16 +15,20 @@ import {
   Menu,
   X,
   ChevronDown,
-  Check
+  Check,
+  Database
 } from "lucide-react";
+import { useAppStore } from "../store/useAppStore";
+import { GitHubTruthHolderModal } from "./GitHubTruthHolderModal";
 
 interface HeaderProps {
+  // Legacy props kept for compatibility, we use Zustand internally now.
   activeTab: string;
   setActiveTab: (tab: string) => void;
   crtEnabled: boolean;
-  setCrtEnabled: Dispatch<SetStateAction<boolean>>;
+  setCrtEnabled: (enabled: boolean | ((prev: boolean) => boolean)) => void;
   soundEnabled: boolean;
-  setSoundEnabled: Dispatch<SetStateAction<boolean>>;
+  setSoundEnabled: (enabled: boolean | ((prev: boolean) => boolean)) => void;
   playSfx: (type: "anvil" | "scribe" | "shield" | "click") => void;
   apiHealth: any;
 }
@@ -49,6 +53,7 @@ export const Header: FC<HeaderProps> = ({
   playSfx,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [gitModalOpen, setGitModalOpen] = useState(false);
 
   const navGroups: NavGroup[] = [
     {
@@ -68,7 +73,7 @@ export const Header: FC<HeaderProps> = ({
       category: "Systems",
       items: [
         { id: "pillars", label: "The 4 Pillars", icon: Layers, badge: "Pillars I-IV" },
-        { id: "spokes", label: "12-Spoke Matrix", icon: Compass, badge: "Symbiosis" },
+        { id: "spokes", label: "15-Spoke Matrix", icon: Compass, badge: "Symbiosis" },
       ]
     },
     {
@@ -172,6 +177,19 @@ export const Header: FC<HeaderProps> = ({
             >
               <Tv className="w-4 h-4" />
               <span className="hidden md:inline text-[11px] font-mono">CRT</span>
+            </button>
+
+            {/* GitHub Truth Holder 1-Click Sync & Mac Integration */}
+            <button
+              onClick={() => {
+                setGitModalOpen(true);
+                playSfx("anvil");
+              }}
+              className="p-2 sm:px-2.5 sm:py-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm shadow-amber-950/30"
+              title="Push directly to GitHub Truth Holder & Sync with Mac"
+            >
+              <Database className="w-4 h-4 text-amber-400" />
+              <span className="hidden sm:inline text-[11px]">Git Sync</span>
             </button>
 
             {/* Mobile All-Views Dropdown Trigger Button (Visible only on mobile/tablet < md) */}
@@ -288,13 +306,13 @@ export const Header: FC<HeaderProps> = ({
           </div>
         )}
 
-        {/* DESKTOP CATEGORIZED NAVIGATION (Clean, non-scrolling, tightly fitted within container) */}
+        {/* DESKTOP CATEGORIZED NAVIGATION (Clean, tactile codex keys) */}
         <nav className="hidden md:flex items-center justify-between py-2.5 border-t border-neutral-900/90 text-xs">
           <div className="flex items-center flex-wrap gap-2 lg:gap-3 w-full">
             {navGroups.map((group, gIdx) => (
               <div key={group.category} className="flex items-center gap-1.5">
-                {gIdx > 0 && <div className="h-4 w-px bg-neutral-800 mx-1 shrink-0" />}
-                <div className="flex items-center gap-1">
+                {gIdx > 0 && <div className="h-6 w-px bg-neutral-800 mx-1 shrink-0" />}
+                <div className="flex items-center gap-1 bg-neutral-950 p-1 rounded-xl border border-neutral-800 shadow-inner">
                   {group.items.map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id || (tab.id === "lab" && activeTab === "combat");
@@ -302,17 +320,17 @@ export const Header: FC<HeaderProps> = ({
                       <button
                         key={tab.id}
                         onClick={() => handleSelectTab(tab.id)}
-                        className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap ${
+                        className={`px-3 py-1.5 rounded-lg font-medium flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap shadow-sm border ${
                           isActive
-                            ? "bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-[0_0_12px_rgba(245,158,11,0.15)] font-bold"
-                            : "text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900/60 border border-neutral-900/40"
+                            ? "bg-neutral-800 text-amber-300 border-neutral-700 shadow-[0_2px_8px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)] font-bold"
+                            : "bg-neutral-900 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 border-transparent shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
                         }`}
                       >
-                        <Icon className={`w-3.5 h-3.5 ${isActive ? "text-amber-400" : "text-neutral-400"}`} />
+                        <Icon className={`w-3.5 h-3.5 ${isActive ? "text-amber-400" : "text-neutral-500"}`} />
                         <span>{tab.label}</span>
                         {tab.badge && (
-                          <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
-                            isActive ? "bg-amber-400/25 text-amber-200" : "bg-neutral-900 text-neutral-500"
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-mono ${
+                            isActive ? "bg-amber-900/40 text-amber-200 border border-amber-500/30" : "bg-neutral-950 text-neutral-600 border border-neutral-800"
                           }`}>
                             {tab.badge}
                           </span>
@@ -327,6 +345,12 @@ export const Header: FC<HeaderProps> = ({
         </nav>
 
       </div>
+
+      {/* GitHub Truth Holder Modal */}
+      <GitHubTruthHolderModal 
+        isOpen={gitModalOpen} 
+        onClose={() => setGitModalOpen(false)} 
+      />
     </header>
   );
 };

@@ -3,6 +3,7 @@ import { WarpedGod, ArmorSymbol, LoreChronicle } from "./types";
 import { initialWarpedPantheon } from "./data/warpedPantheonData";
 import { initialArmorSymbols } from "./data/armorSymbolsData";
 import { initialLoreChronicles } from "./data/loreChroniclesData";
+import { useAppStore } from "./store/useAppStore";
 import { Header } from "./components/Header";
 import { WarpedPantheonView } from "./components/WarpedPantheonView";
 import { ArmorSymbolsView } from "./components/ArmorSymbolsView";
@@ -18,137 +19,13 @@ import { EngineSandboxView } from "./components/EngineSandboxView";
 import { Shield } from "lucide-react";
 
 export default function App() {
-  // Navigation
-  const [activeTab, setActiveTab] = useState<string>("pantheon");
-  const [crtEnabled, setCrtEnabled] = useState<boolean>(true);
-  const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  // Global Store
+  const { activeTab, setActiveTab, crtEnabled, setCrtEnabled, soundEnabled, setSoundEnabled, playSfx } = useAppStore();
 
-  // Persistent Lore & Symbols Data (initialized from canonical cosmology data)
-  const [pantheon] = useState<WarpedGod[]>(() => {
-    try {
-      const saved = localStorage.getItem("adversity_v2_pantheon");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.dominion && parsed[0]?.trueSymbol) {
-          return parsed;
-        }
-      }
-    } catch (e) {
-      console.warn("Pantheon cache parse skipped:", e);
-    }
-    return initialWarpedPantheon;
-  });
-
-  const [symbols] = useState<ArmorSymbol[]>(() => {
-    try {
-      const saved = localStorage.getItem("adversity_v2_symbols");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.trueForm && parsed[0]?.corruptedForm) {
-          return parsed;
-        }
-      }
-    } catch (e) {
-      console.warn("Symbols cache parse skipped:", e);
-    }
-    return initialArmorSymbols;
-  });
-
-  const [chronicles] = useState<LoreChronicle[]>(() => {
-    try {
-      const saved = localStorage.getItem("adversity_v2_chronicles");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.warn("Chronicles cache parse skipped:", e);
-    }
-    return initialLoreChronicles;
-  });
-
-  // Save to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem("adversity_v2_pantheon", JSON.stringify(pantheon));
-    } catch (e) {
-      console.warn("localStorage write failed:", e);
-    }
-  }, [pantheon]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("adversity_v2_symbols", JSON.stringify(symbols));
-    } catch (e) {
-      console.warn("localStorage write failed:", e);
-    }
-  }, [symbols]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("adversity_v2_chronicles", JSON.stringify(chronicles));
-    } catch (e) {
-      console.warn("localStorage write failed:", e);
-    }
-  }, [chronicles]);
-
-  // Web Audio Synthesizer for thematic dark-fantasy audio feedback
-  const playSfx = useCallback((type: "anvil" | "scribe" | "shield" | "click") => {
-    if (!soundEnabled) return;
-    try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      if (ctx.state === "suspended") {
-        ctx.resume().catch(() => {});
-      }
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      const now = ctx.currentTime;
-
-      if (type === "anvil") {
-        // Metallic resonant hammer ping
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(880, now);
-        osc.frequency.exponentialRampToValueAtTime(220, now + 0.35);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-        osc.start(now);
-        osc.stop(now + 0.35);
-      } else if (type === "shield") {
-        // Heavy low-end impact guard
-        osc.type = "triangle";
-        osc.frequency.setValueAtTime(140, now);
-        osc.frequency.exponentialRampToValueAtTime(45, now + 0.3);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc.start(now);
-        osc.stop(now + 0.3);
-      } else if (type === "scribe") {
-        // High quill scratch
-        osc.type = "sawtooth";
-        osc.frequency.setValueAtTime(1200, now);
-        osc.frequency.linearRampToValueAtTime(1600, now + 0.08);
-        gain.gain.setValueAtTime(0.04, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-        osc.start(now);
-        osc.stop(now + 0.08);
-      } else {
-        // Subtle interface tap
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(440, now);
-        gain.gain.setValueAtTime(0.05, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-        osc.start(now);
-        osc.stop(now + 0.05);
-      }
-    } catch (e) {
-      // Audio context might be restricted before user gesture
-    }
-  }, [soundEnabled]);
+  // Persistent Lore & Symbols Data (Immutable Canonical Sources)
+  const pantheon = initialWarpedPantheon;
+  const symbols = initialArmorSymbols;
+  const chronicles = initialLoreChronicles;
 
   return (
     <div className={`min-h-screen bg-[#0a0a0c] text-neutral-100 flex flex-col font-sans selection:bg-amber-500/30 selection:text-amber-200 ${crtEnabled ? "crt-overlay" : ""}`}>
@@ -242,7 +119,7 @@ export default function App() {
           <div className="flex items-center gap-4 text-neutral-400">
             <span className="text-[11px] font-mono">Pillars I–IV</span>
             <span>•</span>
-            <span className="text-[11px] font-mono">12-Spoke Matrix</span>
+            <span className="text-[11px] font-mono">15-Spoke Matrix</span>
             <span>•</span>
             <span className="text-[11px] font-mono text-amber-400">7 Forever Flowers</span>
           </div>

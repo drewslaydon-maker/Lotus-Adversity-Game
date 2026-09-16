@@ -63,7 +63,7 @@ export const foreverFlowersData: ForeverFlower[] = [
   {
     id: "flower-5-closed-economic-loop",
     number: "FLOWER 05",
-    title: "The 12-Spoke Symbiosis",
+    title: "The 15-Spoke Symbiosis",
     subtitle: "Closed Economic Loop: No Isolated Silos",
     category: "Engineering Practice",
     lessonLearned: "Traditional RPGs isolate crafters, gatherers, and combatants into rigid silos. In Adversity, every weapon demands inputs from across the wheel.",

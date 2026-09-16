@@ -89,7 +89,7 @@ export const WarpedPantheonView: FC<WarpedPantheonViewProps> = ({
             The Pantheon of Warped God-People
           </h1>
           <p className="text-sm sm:text-base text-neutral-300 leading-relaxed font-sans">
-            The Original 12-Spoke Wheel of Adversity was the balanced, healthy wheel of human capability and trial. 
+            The Original 15-Spoke Wheel of Adversity was the balanced, healthy wheel of human capability and trial. 
             2,000 years ago, <strong className="text-neutral-100 font-semibold">The Broken RingWheel</strong>—the 
             4 Cardinal Dominions (Alden, Caelen, Mera, Bram) plus The Axis Center (Soran)—seized, fractured, and consumed the spokes, 
             bending those natural practices into their own warped imperial obsessions.

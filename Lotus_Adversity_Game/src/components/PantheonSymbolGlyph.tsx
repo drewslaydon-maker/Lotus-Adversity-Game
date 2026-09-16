@@ -240,32 +240,98 @@ export const PantheonSymbolGlyph: FC<PantheonSymbolGlyphProps> = ({
           </g>
         )}
 
-        {/* 6. LOTUS (Soran: Sunyata Vessel vs The Pierced Obsidian Lotus) */}
+        {/* 6. LOTUS (Soran: Sunyata Vessel of Stillness vs The Pierced Lotus / Void Ouroboros) */}
         {svgShapeType === "lotus" && !isCorrupted && (
-          // True: Pure Sunyata (Empty Vessel) with 8 harmonious radiating petal nodes
+          // True: The Vessel of Stillness — Perfect halo circle enclosing an open, balanced lotus cup holding the drop of Sunyata
           <g filter="url(#glyph-glow-true)">
-            <circle cx="50" cy="50" r="14" fill="none" stroke={strokeColor} strokeWidth="3" />
-            {/* Four balanced petals */}
-            <circle cx="50" cy="24" r="8" fill="none" stroke={strokeColor} strokeWidth="2" />
-            <circle cx="50" cy="76" r="8" fill="none" stroke={strokeColor} strokeWidth="2" />
-            <circle cx="24" cy="50" r="8" fill="none" stroke={strokeColor} strokeWidth="2" />
-            <circle cx="76" cy="50" r="8" fill="none" stroke={strokeColor} strokeWidth="2" />
-            {/* Center unburdened seed */}
-            <circle cx="50" cy="50" r="4" fill={strokeColor} />
+            {/* Outer Halo Circle */}
+            <circle cx="50" cy="50" r="34" fill="none" stroke={strokeColor} strokeWidth="2.5" />
+            <circle cx="50" cy="50" r="30" fill="none" stroke={strokeColor} strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+            
+            {/* Open Lotus Blossom Chalice Cup */}
+            <path
+              d="M 28 48 C 28 66, 72 66, 72 48 C 66 60, 56 63, 50 63 C 44 63, 34 60, 28 48 Z"
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth="2.5"
+            />
+            {/* Lotus Petal Flanks */}
+            <path
+              d="M 33 49 C 37 40, 43 38, 48 44"
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth="2"
+            />
+            <path
+              d="M 67 49 C 63 40, 57 38, 52 44"
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth="2"
+            />
+            
+            {/* Unburdened Sunyata Drop in Equilibrium */}
+            <path
+              d="M 50 32 C 45 40, 44 43, 44 46 C 44 49.5, 46.7 52, 50 52 C 53.3 52, 56 49.5, 56 46 C 56 43, 55 40, 50 32 Z"
+              fill={strokeColor}
+              fillOpacity="0.85"
+              stroke={strokeColor}
+              strokeWidth="1.5"
+            />
+            {/* Center inner light */}
+            <circle cx="50" cy="46" r="2" fill="#ffffff" />
           </g>
         )}
 
         {svgShapeType === "lotus" && isCorrupted && (
-          // Corrupted: Pierced lotus skewered by 4 obsidian spikes into petrification
+          // Corrupted: The Pierced Lotus / Void Ouroboros — Ouroboros split by a razor vertical void-channel with petrified suspended drop
           <g filter="url(#glyph-glow-corrupt)">
-            <circle cx="50" cy="50" r="16" fill="none" stroke={strokeColor} strokeWidth="3" strokeDasharray="6 4" />
-            {/* 4 skewering spikes from the cardinal points */}
-            <line x1="50" y1="10" x2="50" y2="44" stroke="#a855f7" strokeWidth="3.5" />
-            <line x1="50" y1="56" x2="50" y2="90" stroke="#a855f7" strokeWidth="3.5" />
-            <line x1="10" y1="50" x2="44" y2="50" stroke="#a855f7" strokeWidth="3.5" />
-            <line x1="56" y1="50" x2="90" y2="50" stroke="#a855f7" strokeWidth="3.5" />
-            {/* Petrified black center */}
-            <rect x="44" y="44" width="12" height="12" fill="#ef4444" stroke="#a855f7" strokeWidth="2" />
+            {/* Split Ouroboros Left Arc */}
+            <path
+              d="M 47 16 A 34 34 0 0 0 47 84"
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth="3"
+            />
+            {/* Split Ouroboros Right Arc */}
+            <path
+              d="M 53 16 A 34 34 0 0 1 53 84"
+              fill="none"
+              stroke={strokeColor}
+              strokeWidth="3"
+            />
+
+            {/* Twin Serpent Heads / Tail Clamps at Meridian Breaks */}
+            <circle cx="47" cy="16" r="2.5" fill="#ef4444" />
+            <circle cx="53" cy="16" r="2.5" fill="#ef4444" />
+            <circle cx="47" cy="84" r="2.5" fill="#ef4444" />
+            <circle cx="53" cy="84" r="2.5" fill="#ef4444" />
+
+            {/* Vertical Razor Void Channel Cleaving Center */}
+            <line x1="50" y1="10" x2="50" y2="90" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="5 2" />
+
+            {/* Twin Curved Needles of White Bone holding the tear in catatonia */}
+            <path
+              d="M 40 36 C 37 45, 37 55, 40 64"
+              fill="none"
+              stroke="#e2e8f0"
+              strokeWidth="2"
+            />
+            <path
+              d="M 60 36 C 63 45, 63 55, 60 64"
+              fill="none"
+              stroke="#e2e8f0"
+              strokeWidth="2"
+            />
+
+            {/* The Petrified Tear of Sunyata (Never Falls, Frozen In Void) */}
+            <path
+              d="M 50 40 C 46 47, 45 50, 45 53 C 45 56.5, 47.2 59, 50 59 C 52.8 59, 55 56.5, 55 53 C 55 50, 54 47, 50 40 Z"
+              fill="#09090b"
+              stroke="#a855f7"
+              strokeWidth="2"
+            />
+            {/* Frozen crack through the tear */}
+            <line x1="50" y1="42" x2="50" y2="57" stroke="#ef4444" strokeWidth="1.5" />
           </g>
         )}
 

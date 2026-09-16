@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Terminal, X, ChevronUp, ShieldAlert } from 'lucide-react';
+import { Terminal, X, ChevronUp, ShieldAlert, Database } from 'lucide-react';
+import { GitHubTruthHolderModal } from './GitHubTruthHolderModal';
 
 // We duplicate the AGENTS.md content here for the UI so it doesn't rely on raw imports which can break builds.
 const SYSTEM_DIRECTIVES_MD = `
@@ -34,6 +35,7 @@ interface SystemDirectivesDrawerProps {
 
 export const SystemDirectivesDrawer: React.FC<SystemDirectivesDrawerProps> = ({ playSfx }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [gitModalOpen, setGitModalOpen] = useState(false);
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
@@ -94,6 +96,31 @@ export const SystemDirectivesDrawer: React.FC<SystemDirectivesDrawerProps> = ({ 
             </div>
 
             <div className="space-y-8">
+              {/* Rule 0 */}
+              <div className="space-y-3">
+                <h3 className="font-mono text-xs font-bold text-neutral-400 uppercase tracking-widest border-l-2 border-neutral-500 pl-3">
+                  0. Git is the Absolute Truth Holder
+                </h3>
+                <div className="pl-4 space-y-3 font-sans text-sm text-neutral-300 leading-relaxed">
+                  <p><strong className="text-white">No AI Studio Share/Export:</strong> Do NOT rely on AI Studio's native Share or Export features for versioning.</p>
+                  <p><strong className="text-white">Direct GitHub Syncing:</strong> All meaningful progression, codebase changes, and lore milestones MUST be pushed to the established GitHub repository. The repository is the sole "Truth Holder" to prevent AI agent fragmentation and hallucinated codebase divergence.</p>
+                  <p><strong className="text-white">The Active Roadmap:</strong> Agents MUST consult and update <code className="text-xs bg-neutral-900 px-1 rounded text-neutral-200">ROADMAP.md</code> with current focus, completed milestones, and future work. This is the main orbiting truth of development focus.</p>
+                  
+                  <div className="pt-2">
+                    <button
+                      onClick={() => {
+                        setGitModalOpen(true);
+                        playSfx("anvil");
+                      }}
+                      className="px-3.5 py-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-amber-300 font-mono text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm"
+                    >
+                      <Database className="w-4 h-4 text-amber-400" />
+                      <span>Launch In-App Git Push &amp; Mac Sync (Option 1 &amp; 2)</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               {/* Rule 1 */}
               <div className="space-y-3">
                 <h3 className="font-mono text-xs font-bold text-emerald-400 uppercase tracking-widest border-l-2 border-emerald-500 pl-3">
@@ -107,8 +134,18 @@ export const SystemDirectivesDrawer: React.FC<SystemDirectivesDrawerProps> = ({ 
 
               {/* Rule 2 */}
               <div className="space-y-3">
+                <h3 className="font-mono text-xs font-bold text-purple-400 uppercase tracking-widest border-l-2 border-purple-500 pl-3">
+                  2. Structural Canon: The 15-Spoke Matrix
+                </h3>
+                <div className="pl-4 space-y-3 font-sans text-sm text-neutral-300 leading-relaxed">
+                  <p><strong className="text-white">Immutable Node Count:</strong> The Wheel of Adversity ALWAYS consists of exactly <strong className="text-amber-400">15 Spokes</strong> and <strong className="text-amber-400">1 Center Hub</strong> (Soran). Agents are strictly forbidden from resizing, modifying, or shrinking the wheel down to a generic 12-spoke design or generating non-canonical outer rings.</p>
+                </div>
+              </div>
+
+              {/* Rule 3 */}
+              <div className="space-y-3">
                 <h3 className="font-mono text-xs font-bold text-amber-400 uppercase tracking-widest border-l-2 border-amber-500 pl-3">
-                  2. Esoteric & "Dark" Visual Identity
+                  3. Esoteric & "Dark" Visual Identity
                 </h3>
                 <div className="pl-4 space-y-3 font-sans text-sm text-neutral-300 leading-relaxed">
                   <p><strong className="text-white">Color Palette:</strong> The UI relies on a rich, esoteric "dark mode" palette (neutral-950 backgrounds, amber-500 accents for True/Uncorrupted states, rose-500 and emerald-500 for Corrupted states).</p>
@@ -117,20 +154,31 @@ export const SystemDirectivesDrawer: React.FC<SystemDirectivesDrawerProps> = ({ 
                 </div>
               </div>
 
-              {/* Rule 3 */}
+              {/* Rule 4 */}
               <div className="space-y-3">
                 <h3 className="font-mono text-xs font-bold text-blue-400 uppercase tracking-widest border-l-2 border-blue-500 pl-3">
-                  3. Interaction & Sound Design
+                  4. Interaction & Sound Design
                 </h3>
                 <div className="pl-4 space-y-3 font-sans text-sm text-neutral-300 leading-relaxed">
                   <p>The application relies heavily on tactile feedback. Every interaction must trigger the <code className="text-xs bg-neutral-900 px-1 rounded text-blue-200">playSfx</code> hook appropriately (click, shield, anvil, or scribe) to give the UI a physical, mechanical weight.</p>
                 </div>
               </div>
 
-              {/* Rule 4 */}
+              {/* Rule 5 */}
+              <div className="space-y-3">
+                <h3 className="font-mono text-xs font-bold text-pink-400 uppercase tracking-widest border-l-2 border-pink-500 pl-3">
+                  5. Forever Flowers Protocol
+                </h3>
+                <div className="pl-4 space-y-3 font-sans text-sm text-neutral-300 leading-relaxed">
+                  <p><strong className="text-white">What they are:</strong> Forever Flowers are high-prestige, deeply rooted principles and covenants between the Architect and AI Agents. They are not trivial achievements.</p>
+                  <p><strong className="text-white">Agent Rules for Creation:</strong> An AI Agent is strictly forbidden from creating a new Forever Flower via casual generation. A new Flower must ONLY be created when a major, canonical design lesson has been hard-won or a profound systemic vulnerability has been sealed. They must have a strict Category and follow the exact type schema.</p>
+                </div>
+              </div>
+
+              {/* Rule 6 */}
               <div className="space-y-3">
                 <h3 className="font-mono text-xs font-bold text-rose-400 uppercase tracking-widest border-l-2 border-rose-500 pl-3">
-                  4. Anti-Slop (No Generic AI UI)
+                  6. Anti-Slop (No Generic AI UI)
                 </h3>
                 <div className="pl-4 space-y-3 font-sans text-sm text-neutral-300 leading-relaxed">
                   <ul className="list-disc pl-4 space-y-1">
@@ -146,6 +194,12 @@ export const SystemDirectivesDrawer: React.FC<SystemDirectivesDrawerProps> = ({ 
           </div>
         </div>
       </div>
+
+      {/* GitHub Truth Holder Modal */}
+      <GitHubTruthHolderModal 
+        isOpen={gitModalOpen} 
+        onClose={() => setGitModalOpen(false)} 
+      />
     </>
   );
 };

@@ -4,6 +4,13 @@ export type ArmorSlot = "Helm" | "Cuirass" | "Pauldrons" | "Gauntlets" | "Greave
 
 export type DominionType = "Iron" | "Ether" | "Frontier" | "Earth" | "Axis";
 
+export type SpokeId = 
+  | "spoke-1-bastion" | "spoke-2-edge" | "spoke-12-stance" | "spoke-3-stance"
+  | "spoke-3-sorcery" | "spoke-4-inscription" | "spoke-5-alchemy"
+  | "spoke-6-trapping" | "spoke-7-wayfinding" | "spoke-7-cartography" | "spoke-8-forestry" | "spoke-9-trapping"
+  | "spoke-9-masonry" | "spoke-10-quarrying" | "spoke-11-smithing" | "spoke-12-masonry"
+  | "spoke-13-breath" | "spoke-14-vessel" | "spoke-15-unarmored";
+
 export interface SymbolForm {
   name: string;
   designation: "True / Healthy Form" | "Corrupted Imperial Form (Godman's Mark)";
@@ -125,7 +132,7 @@ export interface PhaseDossier {
   phase: string;
   codename: string;
   timeframe: string;
-  status: "COMPLETED" | "ACTIVE SPRINT" | "UPCOMING";
+  status: "COMPLETED" | "ACTIVE SPRINT" | "UPCOMING" | "PAUSED";
   title: string;
   subtitle: string;
   validationGate: string;

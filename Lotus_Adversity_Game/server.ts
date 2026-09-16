@@ -1,8 +1,11 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import dotenv from "dotenv";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
+import { exec } from "child_process";
+import { ZipArchive } from "archiver";
 
 dotenv.config();
 
@@ -40,6 +43,144 @@ app.get("/api/health", (_req, res) => {
     model: "gemini-3.8-flash",
     service: "Adversity - Warped Pantheon & Armor Lore Engine",
   });
+});
+
+// Git status and sync endpoints for Dev Continuity
+app.get("/api/git-status", (_req, res) => {
+  const rootDir = process.cwd();
+  const hasGit = fs.existsSync(path.join(rootDir, ".git"));
+  if (!hasGit) {
+    return res.json({
+      configured: false,
+      hasRemote: false,
+      branch: "main",
+      message: "Git not initialized yet in container. Ready for first-time in-app push.",
+    });
+  }
+
+  exec("git remote -v && git branch --show-current && git status --short", { cwd: rootDir }, (err, stdout, stderr) => {
+    if (err) {
+      return res.json({
+        configured: false,
+        hasRemote: false,
+        message: "No git repository or remote configured in current container.",
+        error: stderr || err.message,
+      });
+    }
+    const hasRemote = stdout.includes("origin") || stdout.includes("http") || stdout.includes("git@");
+    res.json({
+      configured: true,
+      hasRemote,
+      output: stdout,
+    });
+  });
+});
+
+// Direct In-App Push to GitHub using user's Personal Access Token (PAT)
+app.post("/api/git-sync", (req, res) => {
+  const { repoUrl, token, branch = "main", commitMessage, forcePush = false } = req.body || {};
+
+  if (!token || !repoUrl) {
+    return res.status(400).json({
+      success: false,
+      error: "Both GitHub Personal Access Token (PAT) and repository name/URL are required for in-app push.",
+    });
+  }
+
+  // Parse repo slug (e.g. brokenelysium/TheApparatus)
+  let cleanRepo = String(repoUrl).trim();
+  cleanRepo = cleanRepo
+    .replace(/^https?:\/\/github\.com\//i, "")
+    .replace(/^git@github\.com:/i, "")
+    .replace(/\.git$/i, "")
+    .trim();
+
+  if (!cleanRepo.includes("/")) {
+    return res.status(400).json({
+      success: false,
+      error: "Invalid repository format. Please provide 'username/repository' or full GitHub URL (e.g. 'brokenelysium/TheApparatus').",
+    });
+  }
+
+  const cleanBranch = String(branch).trim().replace(/[^a-zA-Z0-9_\-\/]/g, "") || "main";
+  const sanitizedToken = String(token).trim();
+  const cleanCommitMsg = (commitMessage && String(commitMessage).trim()) || 
+    "feat(the-apparatus): sync ratified game engine state to truth holder";
+
+  const rootDir = process.cwd();
+  const isGitRepo = fs.existsSync(path.join(rootDir, ".git"));
+
+  const authUrl = `https://${encodeURIComponent(sanitizedToken)}@github.com/${cleanRepo}.git`;
+
+  const commands: string[] = [];
+  if (!isGitRepo) {
+    commands.push(`git init -b "${cleanBranch}"`);
+  }
+  commands.push(`git config user.name "The Apparatus Architect"`);
+  commands.push(`git config user.email "brokenelysium@gmail.com"`);
+  commands.push(`git remote remove origin 2>/dev/null || true`);
+  commands.push(`git remote add origin "${authUrl}"`);
+  commands.push(`git checkout -B "${cleanBranch}"`);
+  commands.push(`git add -A`);
+  commands.push(`git commit -m "${cleanCommitMsg.replace(/"/g, '\\"')}" || true`);
+
+  const pushFlag = forcePush ? "--force" : "";
+  commands.push(`git push -u origin "${cleanBranch}" ${pushFlag}`);
+
+  const fullScript = commands.join(" && ");
+
+  exec(fullScript, { cwd: rootDir }, (err, stdout, stderr) => {
+    // Redact token from any logs or messages returned to client
+    const sanitize = (text: string) => {
+      if (!text) return "";
+      return text.split(sanitizedToken).join("[REDACTED_PAT]");
+    };
+
+    // Clean remote origin so token is not retained in plain-text on disk
+    exec(`git remote set-url origin "https://github.com/${cleanRepo}.git"`, { cwd: rootDir });
+
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: sanitize(stderr || err.message),
+        details: sanitize(stdout),
+      });
+    }
+
+    res.json({
+      success: true,
+      message: `Successfully pushed to https://github.com/${cleanRepo} (${cleanBranch})!`,
+      repo: cleanRepo,
+      branch: cleanBranch,
+      output: sanitize(stdout),
+    });
+  });
+});
+
+// Export entire project snapshot as .zip for immediate Mac download
+app.get("/api/export-project-zip", (_req, res) => {
+  const archive = new ZipArchive({ zlib: { level: 9 } });
+
+  res.attachment("TheApparatus-Project.zip");
+  res.setHeader("Content-Type", "application/zip");
+
+  archive.on("error", (err: any) => {
+    console.error("Archive stream error:", err);
+    if (!res.headersSent) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  archive.pipe(res);
+
+  // Archive project source files, skipping build artifacts and node_modules
+  archive.glob("**/*", {
+    cwd: process.cwd(),
+    ignore: ["node_modules/**", "dist/**", ".git/**", ".env"],
+    dot: true,
+  });
+
+  archive.finalize();
 });
 
 // Helper for clean JSON extraction from Gemini

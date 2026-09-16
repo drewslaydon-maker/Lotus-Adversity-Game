@@ -20,6 +20,7 @@ The rainbow palette (blue, orange, purple) is discarded in favor of a strict eso
 *   **Purified / True (Restored State):** `amber-500` (True Gold/Sunyata). The color of original virtues.
 
 ## 3. Physical Interaction
+- **Touch & Mobile:** The SVG container MUST have `touch-action: none` to prevent the browser from scrolling the entire page when the user is trying to spin the astrolabe on mobile.
 - The wheel must be fully spinnable via dragging.
 - Text must perfectly counter-rotate to remain legible.
 - When an element is clicked, it summons an absolute-positioned glassmorphic overlay *in-place* over the wheel.
@@ -27,3 +28,6 @@ The rainbow palette (blue, orange, purple) is discarded in favor of a strict eso
 ## 4. Game Engine Integration
 - **Engine Sandbox:** Used to test node state transitions (`Locked` -> `Corrupted` -> `Purified`).
 - The colors of the SVG elements must strictly derive from the *Engine State*, not just hardcoded visual constants.
+
+## 5. Immutable SVG Math
+- Agents are STRICTLY FORBIDDEN from arbitrarily modifying the `360 / 15` geometric layout of the spokes. Any SVG alterations must explicitly account for exactly 15 nodes arranged along the perimeter and inner axis. Do not break the circle math.

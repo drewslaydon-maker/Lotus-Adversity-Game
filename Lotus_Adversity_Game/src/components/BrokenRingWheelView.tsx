@@ -1,6 +1,7 @@
-import { FC, useState, useRef, PointerEvent } from "react";
-import { WarpedGod, Spoke, DominionType } from "../types";
+import { FC, useState, useRef, PointerEvent, useEffect } from "react";
+import { WarpedGod, Spoke, DominionType, SpokeId } from "../types";
 import { spokesData } from "../data/spokesAndPillarsData";
+import { useAppStore } from "../store/useAppStore";
 import { 
   Compass, 
   RotateCcw, 
@@ -36,7 +37,9 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
   spokeStatuses,
   onSpokeInteract,
 }) => {
-  // State: "corrupted" (The Broken RingWheel) vs "uncorrupted" (Original 12-Spoke Wheel)
+  const globalSpokeStates = useAppStore(s => s.spokeStates);
+  
+  // State: "corrupted" (The Broken RingWheel) vs "uncorrupted" (Original 15-Spoke Wheel)
   const [wheelMode, setWheelMode] = useState<"corrupted" | "uncorrupted">("corrupted");
   const [selectedDominion, setSelectedDominion] = useState<DominionType | null>(null);
   const [selectedSpokeNumber, setSelectedSpokeNumber] = useState<number | null>(null);
@@ -47,6 +50,17 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [startAngle, setStartAngle] = useState(0);
   const hasDragged = useRef(false);
+
+  // Prevent zooming/panning on touch devices while interacting with the wheel
+  useEffect(() => {
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isDragging) {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
+    return () => document.removeEventListener("touchmove", handleTouchMove);
+  }, [isDragging]);
 
   const activeGod = pantheon.find((g) => g.dominion === selectedDominion);
   const activeSpoke = spokesData.find((s) => s.number === selectedSpokeNumber);
@@ -72,7 +86,7 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
     const cy = rect.top + rect.height / 2;
     const angle = (Math.atan2(e.clientY - cy, e.clientX - cx) * 180) / Math.PI;
     const newRot = angle - startAngle;
-    if (Math.abs(newRot - wheelRotation) > 1) {
+    if (Math.abs(newRot - wheelRotation) > 4) {
       hasDragged.current = true;
     }
     setWheelRotation(newRot);
@@ -82,13 +96,10 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
     if (isDragging) {
       setIsDragging(false);
       e.currentTarget.releasePointerCapture(e.pointerId);
-      // Optional: play a faint ticking sound on release if we wanted
     }
   };
 
   const handleDominionClick = (dom: DominionType) => {
-    if (hasDragged.current) return; // Prevent click if we were spinning the wheel
-    
     setSelectedDominion(dom);
     setInspectionFocus("dominion");
     const god = pantheon.find((g) => g.dominion === dom);
@@ -101,8 +112,6 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
   };
 
   const handleSpokeClick = (spokeNum: number) => {
-    if (hasDragged.current) return; // Prevent click if we were spinning the wheel
-
     if (interactionMode === "engine" && onSpokeInteract) {
       onSpokeInteract(spokeNum);
       return;
@@ -123,34 +132,34 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
   const innerRadius = 110;
   const innerHubRadius = 55;
 
-  // 12 Spokes positioned sequentially in 4 distinct quadrants starting at 12 o'clock
-  // North (330°, 0°, 30°): Ether (Caelen)
-  // East (60°, 90°, 120°): Iron (Alden)
-  // South (150°, 180°, 210°): Earth (Bram)
-  // West (240°, 270°, 300°): Frontier (Mera)
+  // 12 Outer Spokes positioned sequentially in 4 distinct quadrants starting with Alden at North:
+  // North (330°, 0°, 30°): Iron (Alden) -> 12 (Diplomat), 1 (Bastion - Defining Main North), 2 (Warrior)
+  // East (60°, 90°, 120°): Ether (Caelen) -> 3 (Sorcery), 4 (Inscription - Defining Main East), 5 (Alchemy)
+  // South (150°, 180°, 210°): Frontier (Mera) -> 6 (Trapping), 7 (Wayfinding - Defining Main South), 8 (Forestry)
+  // West (240°, 270°, 300°): Earth (Bram) -> 9 (Masonry), 10 (Quarrying - Defining Main West), 11 (Smithing)
   const outerSpokeAngles = [
-    { num: 4, angle: 330, dom: "Ether" },
-    { num: 5, angle: 0, dom: "Ether" },     // True North
-    { num: 6, angle: 30, dom: "Ether" },
+    { num: 12, angle: 330, dom: "Iron" as DominionType },
+    { num: 1, angle: 0, dom: "Iron" as DominionType },     // True North (Alden's Defining Spoke)
+    { num: 2, angle: 30, dom: "Iron" as DominionType },
     
-    { num: 1, angle: 60, dom: "Iron" },
-    { num: 2, angle: 90, dom: "Iron" },   // True East
-    { num: 3, angle: 120, dom: "Iron" },
+    { num: 3, angle: 60, dom: "Ether" as DominionType },
+    { num: 4, angle: 90, dom: "Ether" as DominionType },   // True East (Caelen's Defining Spoke)
+    { num: 5, angle: 120, dom: "Ether" as DominionType },
     
-    { num: 10, angle: 150, dom: "Earth" },
-    { num: 11, angle: 180, dom: "Earth" }, // True South
-    { num: 12, angle: 210, dom: "Earth" },
+    { num: 6, angle: 150, dom: "Frontier" as DominionType },
+    { num: 7, angle: 180, dom: "Frontier" as DominionType }, // True South (Mera's Defining Spoke)
+    { num: 8, angle: 210, dom: "Frontier" as DominionType },
     
-    { num: 7, angle: 240, dom: "Frontier" },
-    { num: 8, angle: 270, dom: "Frontier" }, // True West
-    { num: 9, angle: 300, dom: "Frontier" },
+    { num: 9, angle: 240, dom: "Earth" as DominionType },
+    { num: 10, angle: 270, dom: "Earth" as DominionType }, // True West (Bram's Defining Spoke)
+    { num: 11, angle: 300, dom: "Earth" as DominionType },
   ];
 
-  // 3 Inner Spokes (Soran's Axis)
+  // 3 Inner Spokes (Soran's Axis Hub)
   const innerSpokeAngles = [
-    { num: 13, angle: 210, dom: "Axis" },
-    { num: 14, angle: 330, dom: "Axis" },
-    { num: 15, angle: 90, dom: "Axis" },
+    { num: 13, angle: 210, dom: "Axis" as DominionType },
+    { num: 14, angle: 330, dom: "Axis" as DominionType },
+    { num: 15, angle: 90, dom: "Axis" as DominionType },
   ];
   
   const allSpokeAngles = [...outerSpokeAngles, ...innerSpokeAngles];
@@ -186,15 +195,31 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
   };
 
   const getSpokeColor = (spokeNum: number, dom: DominionType) => {
-    // If not in engine mode/no status, return default domain colors for uncorrupted, or the specific corrupted color.
-    if (!spokeStatuses) {
-      if (wheelMode === "corrupted") {
-        return getCorruptedColor(dom);
-      }
-      return getDominionColor(dom);
-    }
+    // Use the passed in statuses (from Sandbox) or fallback to the global engine state
+    const currentStatuses = spokeStatuses || globalSpokeStates;
+    const statusIdMap: Record<number, SpokeId> = {
+      1: "spoke-1-bastion",
+      2: "spoke-2-edge",
+      3: "spoke-3-sorcery",
+      4: "spoke-4-inscription",
+      5: "spoke-5-alchemy",
+      6: "spoke-6-trapping",
+      7: "spoke-7-wayfinding",
+      8: "spoke-8-forestry",
+      9: "spoke-9-masonry",
+      10: "spoke-10-quarrying",
+      11: "spoke-11-smithing",
+      12: "spoke-12-stance",
+      13: "spoke-13-breath",
+      14: "spoke-14-vessel",
+      15: "spoke-15-unarmored"
+    };
     
-    const status = spokeStatuses[spokeNum];
+    // Status can come as lowercase string from legacy prop or Capitalized from global
+    const status = currentStatuses === globalSpokeStates 
+        ? globalSpokeStates[statusIdMap[spokeNum]]?.toLowerCase() 
+        : (currentStatuses as Record<number, string>)[spokeNum]?.toLowerCase();
+
     if (status === "purified") return "#f59e0b"; // True Amber
     if (status === "corrupted") {
       // In engine mode, corrupted spokes use the explicit corrupted palette mapped to the god
@@ -203,7 +228,11 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
     if (status === "locked") return "#262626"; // Very dark neutral (neutral-800)
     if (status === "unknown") return "#000000"; // Hidden
     
-    return getDominionColor(dom); // Fallback
+    // Fallback based on wheel mode if no status is found
+    if (wheelMode === "corrupted") {
+      return getCorruptedColor(dom);
+    }
+    return getDominionColor(dom);
   };
 
   return (
@@ -390,18 +419,171 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
               </g>
             )}
 
-            {/* CORRUPTED SPIKES: The 4 Cardinal Dominions bursting outward */}
-            {wheelMode === "corrupted" && (
+            {/* UNCORRUPTED CARDINAL GATES: The 4 Pristine Dominion Anchors */}
+            {wheelMode === "uncorrupted" && (
               <g className="transition-opacity duration-500 animate-in fade-in">
-                {/* 1. North Spike: Caelen (Ether / Mind) */}
+                {/* 1. North Gate: Alden (Iron / War & Diplomacy) */}
                 <g 
                   className="cursor-pointer group"
-                  onClick={() => handleDominionClick("Ether")}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDominionClick("Iron");
+                  }}
+                >
+                  <polygon
+                    points={`${center - 18},${center - radius + 8} ${center},${center - radius - 55} ${center + 18},${center - radius + 8}`}
+                    fill={selectedDominion === "Iron" ? "#f59e0b" : "#b45309"}
+                    stroke="#fef3c7"
+                    strokeWidth="1.5"
+                    className="transition-transform duration-200 group-hover:scale-110"
+                  />
+                  <text
+                    x={center}
+                    y={center - radius - 65}
+                    textAnchor="middle"
+                    fill="#f59e0b"
+                    className="font-mono text-[10px] font-bold tracking-wider"
+                  >
+                    ALDEN (IRON)
+                  </text>
+                  <text
+                    x={center}
+                    y={center - radius - 30}
+                    textAnchor="middle"
+                    fill="#78350f"
+                    className="font-mono text-[8px] font-black"
+                  >
+                    NORTH GATE
+                  </text>
+                </g>
+
+                {/* 2. East Gate: Caelen (Ether / Mind & Glyphs) */}
+                <g 
+                  className="cursor-pointer group"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDominionClick("Ether");
+                  }}
+                >
+                  <polygon
+                    points={`${center + radius - 8},${center - 18} ${center + radius + 55},${center} ${center + radius - 8},${center + 18}`}
+                    fill={selectedDominion === "Ether" ? "#38bdf8" : "#0284c7"}
+                    stroke="#e0f2fe"
+                    strokeWidth="1.5"
+                    className="transition-transform duration-200 group-hover:scale-110"
+                  />
+                  <text
+                    x={center + radius + 30}
+                    y={center - 24}
+                    textAnchor="middle"
+                    fill="#38bdf8"
+                    className="font-mono text-[10px] font-bold tracking-wider"
+                  >
+                    CAELEN (ETHER)
+                  </text>
+                  <text
+                    x={center + radius + 30}
+                    y={center + 3}
+                    textAnchor="middle"
+                    fill="#075985"
+                    className="font-mono text-[8px] font-black"
+                  >
+                    EAST GATE
+                  </text>
+                </g>
+
+                {/* 3. South Gate: Mera (Frontier / Wilds & Survival) */}
+                <g 
+                  className="cursor-pointer group"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDominionClick("Frontier");
+                  }}
+                >
+                  <polygon
+                    points={`${center - 18},${center + radius - 8} ${center},${center + radius + 55} ${center + 18},${center + radius - 8}`}
+                    fill={selectedDominion === "Frontier" ? "#10b981" : "#047857"}
+                    stroke="#d1fae5"
+                    strokeWidth="1.5"
+                    className="transition-transform duration-200 group-hover:scale-110"
+                  />
+                  <text
+                    x={center}
+                    y={center + radius + 75}
+                    textAnchor="middle"
+                    fill="#10b981"
+                    className="font-mono text-[10px] font-bold tracking-wider"
+                  >
+                    MERA (WILD)
+                  </text>
+                  <text
+                    x={center}
+                    y={center + radius + 32}
+                    textAnchor="middle"
+                    fill="#064e3b"
+                    className="font-mono text-[8px] font-black"
+                  >
+                    SOUTH GATE
+                  </text>
+                </g>
+
+                {/* 4. West Gate: Bram (Earth / Labor & Bedrock) */}
+                <g 
+                  className="cursor-pointer group"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDominionClick("Earth");
+                  }}
+                >
+                  <polygon
+                    points={`${center - radius + 8},${center - 18} ${center - radius - 55},${center} ${center - radius + 8},${center + 18}`}
+                    fill={selectedDominion === "Earth" ? "#ea580c" : "#9a3412"}
+                    stroke="#ffedd5"
+                    strokeWidth="1.5"
+                    className="transition-transform duration-200 group-hover:scale-110"
+                  />
+                  <text
+                    x={center - radius - 30}
+                    y={center - 24}
+                    textAnchor="middle"
+                    fill="#ea580c"
+                    className="font-mono text-[10px] font-bold tracking-wider"
+                  >
+                    BRAM (EARTH)
+                  </text>
+                  <text
+                    x={center - radius - 30}
+                    y={center + 3}
+                    textAnchor="middle"
+                    fill="#7c2d12"
+                    className="font-mono text-[8px] font-black"
+                  >
+                    WEST GATE
+                  </text>
+                </g>
+              </g>
+            )}
+
+            {/* CORRUPTED SPIKES: The 4 Cardinal Dominions bursting outward (Alden North Pattern) */}
+            {wheelMode === "corrupted" && (
+              <g className="transition-opacity duration-500 animate-in fade-in">
+                {/* 1. North Spike: Alden (Iron / War & Blood) */}
+                <g 
+                  className="cursor-pointer group"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDominionClick("Iron");
+                  }}
                 >
                   <polygon
                     points={`${center - 22},${center - radius + 10} ${center},${center - radius - 85} ${center + 22},${center - radius + 10}`}
-                    fill={selectedDominion === "Ether" ? "#38bdf8" : "#0284c7"}
-                    stroke="#e0f2fe"
+                    fill={selectedDominion === "Iron" ? "#ef4444" : "#9f1239"}
+                    stroke="#ffe4e6"
                     strokeWidth="2"
                     filter="url(#spikeGlow)"
                     className="transition-transform duration-200 group-hover:scale-105"
@@ -410,31 +592,35 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
                     x={center}
                     y={center - radius - 95}
                     textAnchor="middle"
-                    fill="#38bdf8"
+                    fill="#ef4444"
                     className="font-mono text-[11px] font-bold tracking-wider"
                   >
-                    CAELEN (ETHER)
+                    ALDEN (IRON)
                   </text>
                   <text
                     x={center}
                     y={center - radius - 45}
                     textAnchor="middle"
-                    fill="#0c4a6e"
+                    fill="#451a03"
                     className="font-mono text-[9px] font-black"
                   >
-                    SPIKE
+                    NORTH SPIKE
                   </text>
                 </g>
 
-                {/* 2. East Spike: Alden (Iron / War) */}
+                {/* 2. East Spike: Caelen (Ether / Mind & Cold Sapphire) */}
                 <g 
                   className="cursor-pointer group"
-                  onClick={() => handleDominionClick("Iron")}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDominionClick("Ether");
+                  }}
                 >
                   <polygon
                     points={`${center + radius - 10},${center - 22} ${center + radius + 85},${center} ${center + radius - 10},${center + 22}`}
-                    fill={selectedDominion === "Iron" ? "#ef4444" : "#9f1239"}
-                    stroke="#ffe4e6"
+                    fill={selectedDominion === "Ether" ? "#38bdf8" : "#0284c7"}
+                    stroke="#e0f2fe"
                     strokeWidth="2"
                     filter="url(#spikeGlow)"
                     className="transition-transform duration-200 group-hover:scale-105"
@@ -443,31 +629,35 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
                     x={center + radius + 32}
                     y={center - 32}
                     textAnchor="middle"
-                    fill="#ef4444"
+                    fill="#38bdf8"
                     className="font-mono text-[11px] font-bold tracking-wider"
                   >
-                    ALDEN (IRON)
+                    CAELEN (ETHER)
                   </text>
                   <text
                     x={center + radius + 40}
                     y={center + 3}
                     textAnchor="middle"
-                    fill="#451a03"
+                    fill="#0c4a6e"
                     className="font-mono text-[9px] font-black"
                   >
-                    SPIKE
+                    EAST SPIKE
                   </text>
                 </g>
 
-                {/* 3. South Spike: Bram (Earth / Labor) */}
+                {/* 3. South Spike: Mera (Frontier / Wild & Sickly Emerald) */}
                 <g 
                   className="cursor-pointer group"
-                  onClick={() => handleDominionClick("Earth")}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDominionClick("Frontier");
+                  }}
                 >
                   <polygon
                     points={`${center - 22},${center + radius - 10} ${center},${center + radius + 85} ${center + 22},${center + radius - 10}`}
-                    fill={selectedDominion === "Earth" ? "#ea580c" : "#9a3412"}
-                    stroke="#ffedd5"
+                    fill={selectedDominion === "Frontier" ? "#10b981" : "#047857"}
+                    stroke="#d1fae5"
                     strokeWidth="2"
                     filter="url(#spikeGlow)"
                     className="transition-transform duration-200 group-hover:scale-105"
@@ -476,31 +666,35 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
                     x={center}
                     y={center + radius + 105}
                     textAnchor="middle"
-                    fill="#ea580c"
+                    fill="#10b981"
                     className="font-mono text-[11px] font-bold tracking-wider"
                   >
-                    BRAM (EARTH)
+                    MERA (WILD)
                   </text>
                   <text
                     x={center}
                     y={center + radius + 48}
                     textAnchor="middle"
-                    fill="#431407"
+                    fill="#064e3b"
                     className="font-mono text-[9px] font-black"
                   >
-                    SPIKE
+                    SOUTH SPIKE
                   </text>
                 </g>
 
-                {/* 4. West Spike: Mera (Frontier / Wild) */}
+                {/* 4. West Spike: Bram (Earth / Labor & Molten Slag) */}
                 <g 
                   className="cursor-pointer group"
-                  onClick={() => handleDominionClick("Frontier")}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDominionClick("Earth");
+                  }}
                 >
                   <polygon
                     points={`${center - radius + 10},${center - 22} ${center - radius - 85},${center} ${center - radius + 10},${center + 22}`}
-                    fill={selectedDominion === "Frontier" ? "#10b981" : "#047857"}
-                    stroke="#d1fae5"
+                    fill={selectedDominion === "Earth" ? "#ea580c" : "#9a3412"}
+                    stroke="#ffedd5"
                     strokeWidth="2"
                     filter="url(#spikeGlow)"
                     className="transition-transform duration-200 group-hover:scale-105"
@@ -509,19 +703,19 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
                     x={center - radius - 32}
                     y={center - 32}
                     textAnchor="middle"
-                    fill="#10b981"
+                    fill="#ea580c"
                     className="font-mono text-[11px] font-bold tracking-wider"
                   >
-                    MERA (WILD)
+                    BRAM (EARTH)
                   </text>
                   <text
                     x={center - radius - 40}
                     y={center + 3}
                     textAnchor="middle"
-                    fill="#064e3b"
+                    fill="#431407"
                     className="font-mono text-[9px] font-black"
                   >
-                    SPIKE
+                    WEST SPIKE
                   </text>
                 </g>
               </g>
@@ -537,14 +731,16 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
               
               // Determine if we should render using default "codex" mode colors or "engine" mode dynamic status colors
               const effectiveSpokeColor = getSpokeColor(spoke.num, spoke.dom as DominionType);
-              // Keeps the highlight reticles visually mapped to the specific spoke status
-              const glowColor = getDominionColor(spoke.dom as DominionType);
 
               return (
                 <g
                   key={`spoke-node-${spoke.num}`}
                   className={`cursor-pointer group ${spokeStatuses && spokeStatuses[spoke.num] === "unknown" ? "opacity-50" : "opacity-100"}`}
-                  onClick={() => handleSpokeClick(spoke.num)}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSpokeClick(spoke.num);
+                  }}
                 >
                   {/* Concentric astrolabe focus reticle when selected (no ping drift) */}
                   {isSelected && (
@@ -588,10 +784,10 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
                       x={cx}
                       y={cy + 4}
                       textAnchor="middle"
-                      fill={isSelected ? "#000000" : (spokeStatuses && spokeStatuses[spoke.num] === "locked" ? "#52525b" : "#ffffff")}
+                      fill={isSelected ? "#000000" : (effectiveSpokeColor === "#262626" ? "#52525b" : "#ffffff")}
                       className="font-mono text-[10px] font-bold pointer-events-none"
                     >
-                      {spokeStatuses && spokeStatuses[spoke.num] === "unknown" ? "?" : spoke.num}
+                      {effectiveSpokeColor === "#000000" ? "?" : spoke.num}
                     </text>
                   </g>
                 </g>
@@ -601,7 +797,11 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
             {/* CENTER HUB: Soran, The Axis / Blind Stone */}
             <g
               className="cursor-pointer group"
-              onClick={() => handleDominionClick("Axis")}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDominionClick("Axis");
+              }}
             >
               {/* Outer hub aura */}
               <circle
@@ -679,26 +879,25 @@ export const BrokenRingWheelView: FC<BrokenRingWheelViewProps> = ({
 
           {/* Wheel Footer Key */}
           <div className="flex flex-wrap items-center justify-center gap-3 pt-3 mt-2 border-t border-neutral-800/80 w-full text-xs font-mono">
-
             <span className="flex items-center gap-1.5 text-amber-400">
               <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
-              Iron (Alden): 1-3
+              North / Iron (Alden): 12, 1, 2
             </span>
             <span className="flex items-center gap-1.5 text-sky-400">
               <span className="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block" />
-              Ether (Caelen): 4-6
+              East / Ether (Caelen): 3, 4, 5
             </span>
             <span className="flex items-center gap-1.5 text-emerald-400">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
-              Frontier (Mera): 7-9
+              South / Frontier (Mera): 6, 7, 8
             </span>
             <span className="flex items-center gap-1.5 text-orange-400">
               <span className="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block" />
-              Earth (Bram): 10-12
+              West / Earth (Bram): 9, 10, 11
             </span>
             <span className="flex items-center gap-1.5 text-purple-400">
               <span className="w-2.5 h-2.5 rounded-full bg-purple-500 inline-block" />
-              Axis (Soran): Center
+              Center / Axis (Soran): 13, 14, 15
             </span>
           </div>
 
